@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Gola</title>
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        box-sizing: border-box;
+        line-height: 1.5;
+    }
+    
+    html{
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        background-color:whitesmoke;
+        overflow:auto;
+        min-height:100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+    }
+    
+    .image-background {
+        background-image: "{{url_for('static',filename='assets/main_bg.jpg')}}";
+        height: 500px; 
+        background-position: 50% 100%;
+        background-size:cover ;
+        background-repeat:no-repeat;
+        position: relative;
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: stretch;
+    }
+    
+    nav {
+        width: 100%;
+        height: 10vh;
+        top: 0;
+        background: rgba(0, 0, 0, 0.1); /* Semi-transparent background to see the image behind */
+        z-index: 10;
+    }
+    
+    .nav-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+    }
+    
+    .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333; /* Text color for the logo */
+    gap: 10px; /* Space between the image and text */
+}
+
+.logo-img {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Removes underline from the anchor tag */
+    color: inherit; /* Inherits the color from parent */
+    gap: 10px; /* Space between the logo image and text */
+}
+
+.logo-img img {
+    width: 50px; /* Adjust the size of the logo */
+    height: 50px;
+    border-radius: 50%; /* Circular logo */
+    object-fit: cover; /* Ensures the image fits perfectly */
+}
+
+.logo-img span {
+    font-size: 24px; /* Adjust text size */
+    color: #333333; /* Text color */
+    font-weight: bold;
+}
+
+.logo-img:hover span {
+    color: #2a6768; /* Text color change on hover */
+}
+
+.logo-img:hover img {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+    transition: transform 0.3s ease-in-out; /* Smooth zoom transition */
+}
+
+    
+    .hamburg,.cancel {
+        cursor: pointer;
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        color: #1d4942;
+        display: none;
+        font-size: clamp(2.5rem, 0.5rem + 5vw, 3rem);
+    }
+    
+    .nav-container .links {
+        display: flex;
+    }
+    
+    .nav-container .links a {
+        position: relative;
+        font-size: 1.2rem;
+        color: #1d4942;
+        margin: 0 20px;
+        text-decoration: none;
+        font-weight: 550;
+        display: inline-block; /* Ensures the underline is confined to the link text */
+        transition: 0.3s linear;
+    }
+    
+    .nav-container .links a::before {
+        position: absolute;
+        content: "";
+        bottom: -3px;
+        left: 0;
+        width: 0%;  /* Initially, no underline */
+        height: 3px;
+        background-color: whitesmoke;
+        transition: 0.2s linear;
+    }
+    
+    .nav-container .links a:hover::before {
+        width: 100%; /* On hover, the underline expands to cover the text */
+    }
+    
+    .nav-container .links a:hover {
+        color: whitesmoke;
+    }
+    
+    .dropdown {
+        position: absolute;
+        top: 0;
+        transform: translateY(-500px);
+        width: 100%;
+        height: auto;
+        backdrop-filter: blur(4px) brightness(40%);
+        box-shadow: 0 0 20px black;
+        transition: 0.2s linear;
+    }
+    
+    .dropdown .links a {
+        display: flex;
+        color: hwb(171 56% 0%);
+        text-decoration: none;
+        justify-content: center;
+        padding: 15px 0;
+        align-items: center;
+        transition: 0.2s linear;
+    }
+    
+    .dropdown .links a:hover {
+        background-color: rgba(18, 91, 71, 0.518);
+    }
+    
+    .content-section {
+        padding: 100px 20px;
+        text-align: center;
+        background-color: whitesmoke;
+        color: #333;
+    }
+    
+    .content-section:nth-child(even) {
+        background-color: #e0e0e0;
+    }
+    
+    @media (max-width: 884px) {
+        .nav-container .links {
+            display: none;
+        }
+    
+        .hamburg,
+        .cancel {
+            display: block;
+        }
+    }
+    
+    .wave {
+        margin-top: 70px;
+        padding: 20px;
+        position:absolute;
+        top:23%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        width:100%;
+        text-align: center;
+    }
+    
+    label{
+        font-size: 100px;
+        font-weight: 500;
+        color:white;
+        cursor:pointer;
+    }
+    
+    label:hover{
+        color:#65c0bb;
+    }
+    
+    label span{
+        display: inline-block;
+        font-size: 75px;
+        font-weight:bold;
+        transition: 0.3s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+    
+    label:hover span{
+        color: white;
+        transform: translateY(-30px);
+    }
+    
+    .overlay-h3 {
+        font-size: 1.5rem;
+        color: whitesmoke;
+        margin-top: 10px; /* Space between label and overlay text */
+    }
+    
+    @media (max-width: 768px) {
+        label {
+            font-size: 50px; /* Smaller font for mobile screens */
+        }
+        label span {
+            font-size: 30px; /* Adjust span font size for mobile */
+        }
+        .overlay-h3 {
+            font-size: 1.2rem; /* Smaller overlay text */
+        }
+    }
+    
+    .button{
+        margin-top: 300px;
+        display: inline-block;
+        text-decoration: none;
+        padding:10px 30px;
+        border:1px solid #334;
+        color:#334;
+        font-size: 16px;
+        border-radius: 15px;
+        background-color: rgb(245, 235, 235);
+      }
+      
+    .button:hover{
+        background-color: hwb(171 36% 20%);
+        border-color: #334;
+        color:#fff;
+      }
+    
+    /*About Us...*/
+    .about{
+        width:100%;
+    }
+    
+    .about h1{
+        text-align:center;
+        font-size:48px;
+        color:hwb(171 21% 33%);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 50px;
+    }
+    
+    .about h1::after{
+        content:"";
+        height:5px;
+        width:350px;
+        background-color: #2bc2bb;
+        border-radius:10px;
+        display:block;
+        margin:auto;
+    }
+    
+    .content{
+        padding:0px 60px;
+        margin:60px auto;
+    }
+    
+    .container{
+        width:60%;
+        float:left;
+        text-align:left;
+        padding:0px 30px;
+    }
+    
+    .content p{
+        font-family: sans-serif;
+        font-size: 18px;
+        color:#3d3d3d;
+        margin-top: 20px;
+    }
+    
+    @media screen and (max-width:900px) {
+        .about{
+            width:100%;
+            padding-top: 20px;
+        }
+        .about h1{
+            font-size:32px;
+        }
+        .content{
+            width:100%;
+            float:none;
+        }
+    }
+    
+    /*...Features*/
+    .features{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-wrap: wrap;
+        min-height: 50vh;
+        min-width: 100vw;
+        background-color: whitesmoke;
+    }
+    
+    .wrap h1{
+        text-align:center;
+        font-size:48px;
+        color:hwb(171 21% 33%);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 10px;
+    }
+    
+    .wrap h1::after{
+        content:"";
+        height:5px;
+        width:270px;
+        background-color: #2bc2bb;
+        border-radius:10px;
+        display:block;
+        margin:auto;
+    }
+    
+    .card{
+        position:relative;
+        width: 280px;
+        height: 300px;
+        overflow:hidden;
+        margin:30px;
+        box-shadow:15px 15px 15px #34aabc;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.1);
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        border-top: 2px solid rgba(0, 0, 0, 0.5);
+        border-left: 2px solid rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(6px);
+        transition:1000ms;
+    }
+    
+    .card:hover{
+        transform: scale(1.1);
+    }
+    
+    .glass{
+        padding: 20px;
+        text-align: center;
+    }
+    
+    /*Screenshots*/
+
+    .screenshots {
+  margin-top: 20px;
+  text-align: center;
+  }
+
+.screenshots h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.screenshots-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.screenshot-item {
+  width: 200px;
+  height: auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  margin-bottom: 0%;
+}
+
+.screenshot-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 1000ms ease;
+  margin-bottom: 0%;
+}
+
+
+.screenshot-item:hover img {
+  transform: scale(1.1);
+}
+
+.download {
+    display: inline-block;
+  display: flex; 
+  justify-content: center; 
+  gap: 20px; 
+  margin-top: 20px; 
+  border-radius:1px solid #334;
+}
+
+.download a {
+  padding: 12px 20px; 
+  font-size: 16px; 
+  font-weight: bold;  
+  text-align: center; 
+  text-decoration: none; 
+  border-radius: 15px; 
+  color: #3d3d3d; 
+  transition: transform 0.3s ease, background-color 0.3s ease; 
+}
+
+.download a:first-child {
+  background-color: #dadada; 
+}
+
+.download a:last-child {
+  background-color: #dadada; 
+}
+
+.download a:hover {
+  transform: scale(1.05); 
+  background-color: rgb(95, 188, 182);
+}
+
+@media (max-width: 768px) {
+  .download {
+    flex-direction: column; 
+    align-items: center;
+    gap: 15px; 
+    border-color: #334;
+  }
+}
+
+
+
+
+    /*...form*/
+    .form{
+        text-align: center;
+    }
+    
+    .form h2{
+        text-align:center;
+        font-size:48px;
+        color:#171c1e;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 50px;
+    }
+    
+    .become-partner {
+        background: rgb(46, 150, 150);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 600px;
+        margin: 0 auto;
+    }
+    
+    .become-partner h2 {
+        color: #3dfdf0;
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+    }
+    
+    .become-partner form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .become-partner input {
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
+        border-radius: 15px;
+        padding: 10px;
+        margin: 10px 0;
+        width: 100%;
+        color: #638981;
+        font-family: 'Arial', sans-serif;
+    }
+    
+    .become-partner input::placeholder {
+        color: #ddd;
+    }
+    .become-partner button {
+        display: inline-block;
+        text-decoration: none;
+        padding: 10px 30px;
+        border: 1px solid #334;
+        color: #334;
+        font-size: 16px;
+        background-color: rgb(251, 251, 251);
+        border-radius: 15px; /* Curved corners */
+        text-align: center; /* Optional: ensures text is centered */
+    }
+    
+    
+    .become-partner button:hover {
+        background-color: hwb(171 36% 20%);
+        border-color: #334;
+        color:#fff;
+       
+    }
+    
+    
+    .submit{ 
+        display: inline-block;
+        text-decoration: none;
+        padding:10px 25px;
+        border:1px solid #334;
+        color:#334;
+        font-size: 16px;
+        background-color: whitesmoke; 
+    } 
+    
+    .submit:hover { 
+        background-color: rgb(20, 159, 159);
+        border-color: #334;
+        color:whitesmoke;
+    }
+    
+    .error {
+        color: red;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        text-align: left;
+        width: 100%;
+    }
+            
+    .footer{
+        padding: 20px 0;
+        width: 100%;
+        margin-top: auto;
+    }
+            
+            .contact {
+                width: 100%;
+                background: teal;
+                padding: 20px;
+                text-align: center;
+                border-top: 1px solid rgba(255,255,255,.5);
+            }
+            
+            .contact h2, .contact p, .contact a {
+                color: #fff;
+                margin: 5px 0;
+                text-decoration: none;
+            }
+    
+            .copyright {
+                max-width: 100000px;
+                background: rgba(255, 255, 255, 0.1); /* Glass-like transparent effect */
+                border-top: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 8px 100px;
+                backdrop-filter: blur(10px);
+                text-align: center;
+                font-weight: bold;
+                color: #fff;
+            }
+            
+            .contact a:hover {
+                text-decoration: underline;
+            }
+            
+            .contact p {
+                margin: 10px 0;
+            }
+                    
+            .faq {
+                        background: #fff;
+                        border-radius: 10px;
+                        padding: 20px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        width: 100%;
+                        margin: 0 auto;
+                        animation: fadeInAndSlideDown 1s ease-in-out forwards;
+                        text-align: center;
+                    }
+            
+                    .faq h2 {
+                        color: #333;
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+            
+                    .faq h3 {
+                        color: #41b7a3;
+                        cursor: pointer;
+                        transition: color 0.3s ease;
+                    }
+            
+                    .faq h3:hover {
+                        color: #186e57;
+                    }
+            
+                    .faq p {
+                        color: #454444;
+                        line-height: 1.6;
+                        margin-top: 10px;
+                    }
+            
+                    /* Combined animation for fade-in and slide-down effect */
+                    @keyframes fadeInAndSlideDown {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }    </style>
+</head>
+<body>
+    <div class="image-background">
+    <nav>
+        <div class="nav-container">
+            <div class="logo" data-aos="zoom-in" data-aos-duration="1500">
+                <a href="#" class="logo-img">
+                    <img src="{{ url_for('static', filename='assets/logo.jpeg') }}" alt="logo_img">
+                    <span>Gola</span>
+                </a>
+            </div>
+            <div class="links">
+                <div class="link" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="100"><a href="#">Home</a></div>
+                <div class="link" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="200"><a href="#">About Us</a></div>
+                <div class="link" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="300"><a href="#">Features</a></div>
+                <div class="link" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="400"><a href="#">Services</a></div>
+                <div class="link" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="500"><a href="#">Contact</a></div>
+            </div>
+            <i class="fa-solid fa-bars hamburg" onclick="hamburg()"></i>
+        </div>
+        <div class="dropdown">
+            <div class="links">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Features</a>
+                <a href="#">Service</a>
+                <a href="#">Contact</a>
+                <i class="fa-solid fa-xmark cancel" onclick="cancel()"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="wave">
+        <label>Welcome To GOLA</label>
+    
+
+    <p class="overlay-h3">
+        <span class="dynamic-text">Your trusted partner in B2B e-commerce!</span>
+    </p>
+
+    <p>At Gola, we are commited as your one-stop solution for all B2B transactions.</p>
+    </div>
+
+    <div>
+    <a href="#"class=button><i class="fa-sharp fa-solid fa-paper-plane"></i> Get In Touch</a></div>
+    
+    </div>
+         
+    <section>
+      <div class="about">
+        <h1>About Gola</h1>
+        <div class="content">
+           <p>-At GOLA, we pride ourselves on being your comprehensive solution for all B2B needs.</p>
+           <p>-Whether you're a manufacturer, wholesaler, or retailer, we simplify and streamline the process of business transactions, connecting you with trusted partners and facilitating smooth, efficient exchanges.</p>
+           <p>-Our platform is designed to support and empower businesses at every stage of the supply chain, ensuring security, reliability and fast transactions.</p>
+           <p>-With a commitment to excellence and a customer-first approach, GOLA is here to help you enhance your business operations, maximize growth, and achieve long-term success.</p>
+           <p>Let us be the bridge that takes your business to the next level!</p>
+      </div>
+     </div>
+    </section>
+
+    <section>
+        <div class="wrap">
+          <h1>Features</h1>
+          <div class="features">
+            <div class="card">
+              <div class="glass">
+                <img src="{{ url_for('static', filename='assets/Features/checklist.png') }}"alt="">
+                <p>Easy registration and onboarding</p>
+              </div>
+            </div>
+        
+            <div class="card">
+              <div class="glass">
+                <img src="{{ url_for('static', filename='assets/Features/graph.png') }}"alt="">
+                <p>Real-time inventory management</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="glass">
+                <img src="{{ url_for('static', filename='assets/Features/conveyorbelt.png') }}" height=193px width=192px alt="">
+                <p>Seamless Integrated Logistics</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="glass">
+                <img src="{{ url_for('static', filename='assets/Features/bubblechat.png') }}"alt="">
+                <p>Robust customer support</p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div>
+        <section class="screenshots">
+          <h2>App Screenshots</h2>
+          <div class="screenshots-view">
+            <div class="screenshot-item"><img src="{{ url_for('static', filename='assets/Screenshots/screenshot_1.jpg') }}" alt="Screenshot 1"></div>
+            <div class="screenshot-item"><img src="{{ url_for('static', filename='assets/Screenshots/screenshot_2.jpg') }}" alt="Screenshot 2"></div>
+            <div class="screenshot-item"><img src="{{ url_for('static', filename='assets/Screenshots/screenshot_3.jpg') }}" alt="Screenshot 3"></div>
+        </secion>
+    </div>
+    <div>
+        <section class="download">
+            <a href="https://www.apple.com/app-store/">Download on the App Store</a>
+            <a href="https://play.google.com/store">Get it on Google Play</a>
+        </section>
+    </div>
+    
+
+    <div class="form">
+    <h2>Become Our Partner</h2>
+    <section class="become-partner">
+        <form id="partnerForm" onsubmit="return validateForm()">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <div id="nameError" class="error"></div>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <div id="emailError" class="error"></div>
+            <input type="text" id="address" placeholder="Address" required>
+            <div id="addressError" class="error"></div>
+            <button type="submit"><i class="fa-sharp fa-solid fa-paper-plane"></i> Submit</button>
+        </form>
+    </section>
+</div>
+
+<div> <section class="faq">
+     <h2>Frequently Asked Questions</h2> 
+     <h3>What is GOLA?</h3> 
+     <p>GOLA is a B2B e-commerce platform designed to connect businesses for efficient buying and selling.</p> 
+     <h3>How do I register?</h3> 
+     <p>Simply click on the 'Download' buttons above and follow the onboarding instructions.</p> 
+    </section>
+</div>
+
+   <div class="footer">
+    <footer>
+        <div class="contact">
+            <h2>Contact Us</h2>
+            <p>If you have any questions or inquiries, please reach out to us at:</p>
+            <p>"Email:"<a href="mailto:golamartindia@gmail.com">golamartindia@gmail.com</a></p>
+            <div class="copyright">© 2024 GOLA. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></div> 
+        </div> 
+            
+    </footer>
+</div>
+      
+    <script>
+        window.addEventListener('wheel', function(e) {
+    e.preventDefault(); // This will stop scrolling
+       });
+        function hamburg(){
+            const navbar = document.querySelector(".dropdown")
+            navbar.style.transform = "translateY(0px)"
+        }
+
+        function cancel(){
+            const navbar = document.querySelector(".dropdown")
+            navbar.style.transform = "translateY(-500px)"
+        }
+
+        const text = document.querySelectorAll('label');
+      text.forEach(label =>{
+        label.innerHTML = label.textContent.split('').map((text, wave) =>
+        `<span style="transition-delay: ${wave * 50}ms">${text}</span>`).join('');
+      });
+
+      function validateForm() {
+            let valid = true;
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            // Name validation
+            if (name === "") {
+                valid = false;
+                document.getElementById('nameError').textContent = "Name is required.";
+            } else {
+                document.getElementById('nameError').textContent = "";
+            }
+
+            // Email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === "") {
+                valid = false;
+                document.getElementById('emailError').textContent = "Email is required.";
+            } else if (!emailPattern.test(email)) {
+                valid = false;
+                document.getElementById('emailError').textContent = "Invalid email format.";
+            } else {
+                document.getElementById('emailError').textContent = "";
+            }
+
+            // Address validation
+            if (address === "") {
+                valid = false;
+                document.getElementById('addressError').textContent = "Address is required.";
+            } else {
+                document.getElementById('addressError').textContent = "";
+            }
+
+            return valid;
+        }
+        
+                function toggleAnswer(element) {
+                    const answer = element.nextElementSibling;
+                    const isVisible = answer.style.display === 'block';
+        
+                    if (isVisible) {
+                        answer.style.display = 'none';
+                    } else {
+                        answer.style.display = 'block';
+                    }
+                }
+                //...navbar
+function hamburg(){
+    const navbar = document.querySelector(".dropdown")
+    navbar.style.transform = "translateY(0px)"
+}
+
+function cancel(){
+    const navbar = document.querySelector(".dropdown")
+    navbar.style.transform = "translateY(-500px)"
+}
+
+
+
+
+    </script>
+</body>
+</html>
