@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState("Home"); // Default active link
