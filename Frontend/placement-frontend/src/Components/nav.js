@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState("Home"); // Default active link
@@ -29,7 +28,7 @@ export default function Navbar() {
           {/* Desktop Navigation (Centered) */}
           <div className="d-none d-lg-flex mx-auto">
             <ul className="navbar-nav d-flex flex-row gap-3">
-              {["Home", "Features", "Pricing", "FAQs", "About"].map((name) => (
+              {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
                 <li className="nav-item" key={name}>
                   <a
                     href={`/${name.toLowerCase()}`}
@@ -65,7 +64,7 @@ export default function Navbar() {
         <div className="sidebar">
           <button className="close-btn" onClick={() => setMenuOpen(false)}>&times;</button>
           <ul className="nav flex-column">
-            {["Home", "Features", "Pricing", "FAQs", "About"].map((name) => (
+            {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
               <li className="nav-item" key={name}>
                 <a
                   href={`/${name.toLowerCase()}`}
@@ -103,7 +102,8 @@ export default function Navbar() {
           height: 100%;
           transition: right 0.4s ease-in-out;
           display: flex;
-          z-index: 10       }
+          z-index: 10;
+        }
         .mobile-menu.open {
           right: 0;
         }
