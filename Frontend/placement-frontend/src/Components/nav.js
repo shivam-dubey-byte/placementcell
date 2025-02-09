@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import { Link } from "react-router-dom"; // Import Link
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState("Home"); // Default active link
   const [menuOpen, setMenuOpen] = useState(false); // Controls mobile sidebar
@@ -48,8 +49,8 @@ export default function Navbar() {
 
           {/* Buttons on the Right Side */}
           <div className="d-none d-lg-flex gap-2">
-            <button type="button" className="btn btn-outline-warning">Login</button>
-            <button type="button" className="btn btn-warning">Sign-up</button>
+            <Link to="/login" className="btn btn-outline-warning">Login</Link>
+            <Link to="/signup" className="btn btn-warning">Sign-up</Link>
           </div>
 
           {/* Mobile Hamburger Menu */}
@@ -80,10 +81,14 @@ export default function Navbar() {
               </li>
             ))}
             <li className="nav-item mt-3">
-              <button type="button" className="btn btn-outline-warning w-100">Login</button>
+            <Link to="/login" className="btn btn-outline-warning w-100 d-block text-center" style={{ textDecoration: "none" }}>
+            Login
+            </Link>
             </li>
             <li className="nav-item mt-2">
-              <button type="button" className="btn btn-warning w-100">Sign-up</button>
+            <Link to="/signup" className="btn btn-warning w-100 d-block text-center" style={{ textDecoration: "none" }}>
+            Sign-up
+            </Link>
             </li>
           </ul>
         </div>

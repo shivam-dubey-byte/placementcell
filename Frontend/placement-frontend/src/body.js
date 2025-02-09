@@ -1,14 +1,14 @@
-import React,{useRef, useEffect} from 'react'
-import Nav from './Components/nav';
-import  Home from './Components/home';
+import React from 'react';
+import Nav from './components/Nav.js';
+import Home from './components/Home.js';
 
 function Body() {
- 
-  
-  return (<>
-  <Nav/>
-  <Home/>
-  </>);
+  return (
+    <>
+      <Nav />
+      <Home />
+    </>
+  );
 }
 
 export default Body;
