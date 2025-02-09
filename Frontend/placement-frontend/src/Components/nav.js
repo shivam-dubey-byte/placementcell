@@ -1,47 +1,63 @@
-import React from 'react';
-import { useState } from 'react';
-//import '../Components/style.css'; // Uncomment if you have a CSS file
+import React, { useState } from "react";
 
 export default function Navbar() {
-  const [changeVisible, setVisible] = useState(false);
+  const [activeLink, setActiveLink] = useState("Home"); // Default active link set to "Home"
 
-  const toggleMenu = (event) => {
-    event.currentTarget.classList.toggle('change');
-    setVisible((prevState) => !prevState);
+  const handleLinkClick = (e, link) => {
+    e.preventDefault(); // Prevent page reload
+    setActiveLink(link); // Set active link
   };
 
   return (
     <>
-      {/* Navbar Start */}
-      <nav className="navbar navbar-light custom-navbar">
-        <div className="container">
-          {/* Logo and Brand Name */}
-          <div className="d-flex align-items-center">
-            <img
-              src={`${process.env.PUBLIC_URL}/mujlogo.png`} // Logo from the public folder
-              alt="MUJ Logo"
-              style={{ height: '50px', width: 'auto', marginRight: '10px' }} // Set height and width
-            />
-            <a className="navbar-brand playfair-display-navbar">
-              MUJ Training & Placement Cell
-            </a>
+      <div className="container">
+        <header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+          {/* Logo and Title */}
+          <div className="col-md-3 mb-2 mb-md-0">
+            <div className="d-inline-flex link-body-emphasis text-decoration-none">
+              <img
+                src={`${process.env.PUBLIC_URL}/mujlogo.png`}
+                alt="MUJ Logo"
+                style={{ height: "40px", width: "auto", marginRight: "10px" }}
+              />
+              <h1 className="navbar-brand">MUJ Placement Cell</h1>
+            </div>
           </div>
 
-          {/* Search Form */}
-          <form className="d-flex">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-primary" type="submit">
-              Search
+          {/* Navigation Links */}
+          <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            {[
+              { name: "Home", path: "/" },
+              { name: "Features", path: "/features" },
+              { name: "Pricing", path: "/pricing" },
+              { name: "FAQs", path: "/faqs" },
+              { name: "About", path: "/about" },
+            ].map((item) => (
+              <li key={item.name}>
+                <a
+                  href={item.path}
+                  className="nav-link px-2"
+                  style={{
+                    color: activeLink === item.name ? "#d5652c" : "#6c757d",
+                    fontWeight: activeLink === item.name ? "bold" : "normal",
+                  }}
+                  onClick={(e) => handleLinkClick(e, item.name)}
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          {/* Buttons */}
+          <div className="col-md-3 text-end">
+            <button type="button" className="btn btn-outline-warning me-2">
+              Login
             </button>
-          </form>
-        </div>
-      </nav>
-      {/* Navbar End */}
+            <button type="button" className="btn btn-warning">Sign-up</button>
+          </div>
+        </header>
+      </div>
     </>
   );
 }
