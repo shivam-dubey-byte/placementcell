@@ -1,6 +1,6 @@
 import React from "react";
-import Login from "../components/Login";
-import Nav from "../components/Nav";
+import Login from "../components/Login.js";
+import Nav from "../components/Nav.js";
 
 
 function LoginPage() {
