@@ -1,0 +1,11 @@
+/* styles.css */
+.playfair-display-navbar {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 700; /* Adjust the weight as needed (400 to 900) */
+  font-style: normal;
+}
+
+.custom-navbar {
+  background-color: #e3f2fd;
+}
