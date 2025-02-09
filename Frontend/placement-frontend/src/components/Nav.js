@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
-import { useNavigate } from "react-router-dom";
-export default function Navbar() {
-  const [activeLink, setActiveLink] = useState("Home"); // Default active link
-  const [menuOpen, setMenuOpen] = useState(false); // Controls mobile sidebar
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-  const handleLinkClick = (e, link) => {
-    e.preventDefault();
-    setActiveLink(link);
-    setMenuOpen(false); // Close sidebar after selection
-  };
+export default function Navbar() {
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState("");
+
+  useEffect(() => {
+    const currentPath = location.pathname.replace("/", "") || "home";
+    setActiveLink(currentPath.charAt(0).toUpperCase() + currentPath.slice(1));
+  }, [location.pathname]);
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
@@ -17,31 +18,30 @@ export default function Navbar() {
       <nav className="navbar navbar-light bg-light px-3">
         <div className="container-fluid">
           {/* Logo & Title */}
-          <a className="navbar-brand d-flex align-items-center" href="/">
+          <Link className="navbar-brand d-flex align-items-center" to="/">
             <img
               src={`${process.env.PUBLIC_URL}/mujlogo.png`}
               alt="MUJ Logo"
               style={{ height: "40px", width: "auto", marginRight: "10px" }}
             />
             <h1 className="m-0" style={{ fontSize: "1.5rem" }}>MUJ Placement Cell</h1>
-          </a>
+          </Link>
 
           {/* Desktop Navigation (Centered) */}
           <div className="d-none d-lg-flex mx-auto">
             <ul className="navbar-nav d-flex flex-row gap-3">
               {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
                 <li className="nav-item" key={name}>
-                  <a
-                    href={`/${name.toLowerCase()}`}
+                  <Link
+                    to={name === "Home" ? "/" : `/${name.toLowerCase()}`}
                     className="nav-link"
                     style={{
                       color: activeLink === name ? "#d5652c" : "#6c757d",
                       fontWeight: activeLink === name ? "bold" : "normal",
                     }}
-                    onClick={(e) => handleLinkClick(e, name)}
                   >
                     {name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -67,28 +67,28 @@ export default function Navbar() {
           <ul className="nav flex-column">
             {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
               <li className="nav-item" key={name}>
-                <a
-                  href={`/${name.toLowerCase()}`}
+                <Link
+                  to={name === "Home" ? "/" : `/${name.toLowerCase()}`}
                   className="nav-link"
                   style={{
                     color: activeLink === name ? "#d5652c" : "#6c757d",
                     fontWeight: activeLink === name ? "bold" : "normal",
                   }}
-                  onClick={(e) => handleLinkClick(e, name)}
+                  onClick={() => setMenuOpen(false)}
                 >
                   {name}
-                </a>
+                </Link>
               </li>
             ))}
             <li className="nav-item mt-3">
-            <Link to="/login" className="btn btn-outline-warning w-100 d-block text-center" style={{ textDecoration: "none" }}>
-            Login
-            </Link>
+              <Link to="/login" className="btn btn-outline-warning w-100 d-block text-center">
+                Login
+              </Link>
             </li>
             <li className="nav-item mt-2">
-            <Link to="/signup" className="btn btn-warning w-100 d-block text-center" style={{ textDecoration: "none" }}>
-            Sign-up
-            </Link>
+              <Link to="/signup" className="btn btn-warning w-100 d-block text-center">
+                Sign-up
+              </Link>
             </li>
           </ul>
         </div>
