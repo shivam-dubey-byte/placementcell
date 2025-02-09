@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState("Home"); // Default active link
@@ -15,7 +15,7 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="navbar navbar-light bg-light px-3">
-        <div className="container-fluid d-flex align-items-center justify-content-between">
+        <div className="container-fluid">
           {/* Logo & Title */}
           <a className="navbar-brand d-flex align-items-center" href="/">
             <img
@@ -26,17 +26,8 @@ export default function Navbar() {
             <h1 className="m-0" style={{ fontSize: "1.5rem" }}>MUJ Placement Cell</h1>
           </a>
 
-          {/* Hamburger Menu Button (Only on Mobile) */}
-          <button
-            className="navbar-toggler d-lg-none"
-            type="button"
-            onClick={() => setMenuOpen(true)}
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          {/* Desktop Navigation (Only visible on large screens) */}
-          <div className="d-none d-lg-flex align-items-center">
+          {/* Desktop Navigation (Centered) */}
+          <div className="d-none d-lg-flex mx-auto">
             <ul className="navbar-nav d-flex flex-row gap-3">
               {["Home", "Features", "Pricing", "FAQs", "About"].map((name) => (
                 <li className="nav-item" key={name}>
@@ -54,11 +45,18 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
-            <div className="d-flex gap-2 ms-3">
-              <button type="button" className="btn btn-outline-warning">Login</button>
-              <button type="button" className="btn btn-warning">Sign-up</button>
-            </div>
           </div>
+
+          {/* Buttons on the Right Side */}
+          <div className="d-none d-lg-flex gap-2">
+            <button type="button" className="btn btn-outline-warning">Login</button>
+            <button type="button" className="btn btn-warning">Sign-up</button>
+          </div>
+
+          {/* Mobile Hamburger Menu */}
+          <button className="navbar-toggler d-lg-none" type="button" onClick={() => setMenuOpen(true)}>
+            <span className="navbar-toggler-icon"></span>
+          </button>
         </div>
       </nav>
 
@@ -100,7 +98,7 @@ export default function Navbar() {
         .mobile-menu {
           position: fixed;
           top: 0;
-          right: -100%; /* Initially hidden */
+          right: -100%;
           width: 100%;
           height: 100%;
           transition: right 0.4s ease-in-out;
@@ -140,4 +138,3 @@ export default function Navbar() {
     </>
   );
 }
-
