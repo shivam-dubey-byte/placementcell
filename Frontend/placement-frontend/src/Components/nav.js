@@ -103,7 +103,7 @@ export default function Navbar() {
           height: 100%;
           transition: right 0.4s ease-in-out;
           display: flex;
-        }
+          z-index: 10       }
         .mobile-menu.open {
           right: 0;
         }
