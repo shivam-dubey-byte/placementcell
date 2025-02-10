@@ -7,7 +7,7 @@ const { sendResetEmail } = require('../mail/resetMail');
 // User Signup
 const signup = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { name,email, password } = req.body;
 
     // Check if user already exists
     const existingUser = await findUserByEmail(email);
@@ -16,7 +16,7 @@ const signup = async (req, res) => {
     }
 
     // Create new user
-    const userId = await createUser(email, password);
+    const userId = await createUser(name,email, password);
     res.status(201).json({ message: 'User signed up successfully', userId });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
@@ -41,7 +41,7 @@ const login = async (req, res) => {
     }
 
     // Generate JWT Token
-    const token = jwt.sign({ userId: users._id, email: users.email }, 'mujtpc', {
+    const token = jwt.sign({ userId: users._id, email: users.email,name: users.name }, 'mujtpc', {
       expiresIn: '1h',
     });//process.env.JWT_SECRET
 

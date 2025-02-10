@@ -21,7 +21,7 @@ export default function Login() {
       const data = await response.json();
       
       if (response.ok) {
-        //localStorage.setItem("token", data.token); // Store JWT token
+        localStorage.setItem("token", data.token); // Store JWT token
         alert("Login successful!");
         window.location.href = "/dashboard"; // Redirect user
       } else {
