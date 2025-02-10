@@ -1,1 +1,1 @@
-# MUJ TPC Backend
+# EduAuth 
