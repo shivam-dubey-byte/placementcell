@@ -1,20 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("token") ? true : false
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
 
+  // Update active link based on the route
   useEffect(() => {
-    const currentPath = location.pathname.replace("/", "") || "home";
-    setActiveLink(currentPath.charAt(0).toUpperCase() + currentPath.slice(1));
+    const pathMap = {
+      "/": "Home",
+      "/features": "Features",
+      "/dashboard": "Dashboard",
+      "/faqs": "FAQs",
+      "/about": "About",
+    };
+    setActiveLink(pathMap[location.pathname] || "Home");
   }, [location.pathname]);
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  // Handle Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
+
+  // Handle Dashboard Click - Redirect if not logged in
+  const handleDashboardClick = (e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      navigate("/login");
+    }
+  };
 
   return (
     <>
-      {/* Navbar */}
       <nav className="navbar navbar-light bg-light px-3">
         <div className="container-fluid">
           {/* Logo & Title */}
@@ -24,10 +48,12 @@ export default function Navbar() {
               alt="MUJ Logo"
               style={{ height: "40px", width: "auto", marginRight: "10px" }}
             />
-            <h1 className="m-0" style={{ fontSize: "1.5rem" }}>MUJ Placement Cell</h1>
+            <h1 className="m-0" style={{ fontSize: "1.5rem" }}>
+              MUJ Placement Cell
+            </h1>
           </Link>
 
-          {/* Desktop Navigation (Centered) */}
+          {/* Desktop Navigation */}
           <div className="d-none d-lg-flex mx-auto">
             <ul className="navbar-nav d-flex flex-row gap-3">
               {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
@@ -38,7 +64,11 @@ export default function Navbar() {
                     style={{
                       color: activeLink === name ? "#d5652c" : "#6c757d",
                       fontWeight: activeLink === name ? "bold" : "normal",
+                      minWidth: "80px", // Ensures consistent width
+                      display: "inline-block", // Keeps layout stable
+                      textAlign: "center",
                     }}
+                    onClick={name === "Dashboard" ? handleDashboardClick : undefined}
                   >
                     {name}
                   </Link>
@@ -47,14 +77,30 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Buttons on the Right Side */}
+          {/* Right-Side Buttons */}
           <div className="d-none d-lg-flex gap-2">
-            <Link to="/login" className="btn btn-outline-warning">Login</Link>
-            <Link to="/signup" className="btn btn-warning">Sign-up</Link>
+            {!isAuthenticated ? (
+              <>
+                <Link to="/login" className="btn btn-outline-warning">
+                  Login
+                </Link>
+                <Link to="/signup" className="btn btn-warning">
+                  Sign-up
+                </Link>
+              </>
+            ) : (
+              <button onClick={handleLogout} className="btn btn-danger">
+                Logout
+              </button>
+            )}
           </div>
 
           {/* Mobile Hamburger Menu */}
-          <button className="navbar-toggler d-lg-none" type="button" onClick={() => setMenuOpen(true)}>
+          <button
+            className="navbar-toggler d-lg-none"
+            type="button"
+            onClick={() => setMenuOpen(true)}
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
         </div>
@@ -63,7 +109,9 @@ export default function Navbar() {
       {/* Mobile Sidebar Menu */}
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
         <div className="sidebar">
-          <button className="close-btn" onClick={() => setMenuOpen(false)}>&times;</button>
+          <button className="close-btn" onClick={() => setMenuOpen(false)}>
+            &times;
+          </button>
           <ul className="nav flex-column">
             {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
               <li className="nav-item" key={name}>
@@ -73,22 +121,34 @@ export default function Navbar() {
                   style={{
                     color: activeLink === name ? "#d5652c" : "#6c757d",
                     fontWeight: activeLink === name ? "bold" : "normal",
+                    minWidth: "80px",
+                    display: "inline-block",
+                    textAlign: "center",
                   }}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(e) => {
+                    if (name === "Dashboard") handleDashboardClick(e);
+                    setMenuOpen(false); // Close menu instantly
+                  }}
                 >
                   {name}
                 </Link>
               </li>
             ))}
             <li className="nav-item mt-3">
-              <Link to="/login" className="btn btn-outline-warning w-100 d-block text-center">
-                Login
-              </Link>
-            </li>
-            <li className="nav-item mt-2">
-              <Link to="/signup" className="btn btn-warning w-100 d-block text-center">
-                Sign-up
-              </Link>
+              {!isAuthenticated ? (
+                <>
+                  <Link to="/login" className="btn btn-outline-warning w-100 d-block text-center">
+                    Login
+                  </Link>
+                  <Link to="/signup" className="btn btn-warning w-100 d-block text-center mt-2">
+                    Sign-up
+                  </Link>
+                </>
+              ) : (
+                <button onClick={handleLogout} className="btn btn-danger w-100 d-block text-center">
+                  Logout
+                </button>
+              )}
             </li>
           </ul>
         </div>
@@ -98,7 +158,6 @@ export default function Navbar() {
       {/* Styles for Sidebar and Blur Effect */}
       <style>
         {`
-        /* Mobile Menu Styles */
         .mobile-menu {
           position: fixed;
           top: 0;
@@ -134,9 +193,6 @@ export default function Navbar() {
           background: rgba(0, 0, 0, 0.3);
           cursor: pointer;
           z-index: 1000;
-        }
-        @media (min-width: 992px) {
-          .mobile-menu { display: none; } /* Hide sidebar on large screens */
         }
         `}
       </style>
