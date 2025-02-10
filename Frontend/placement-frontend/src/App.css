@@ -1,6 +1,6 @@
 /* Centered Auth Block */
 .auth-wrapper {
-  background: url("../public/background.jpg") no-repeat center center/cover;
+  background: url("../public/muj.svg") no-repeat center center/cover;/*background.jpg*/
   height: 100vh;
   display: flex;
   align-items: center;
