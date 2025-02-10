@@ -11,7 +11,7 @@ export default function Home() {
         .hero {
           height: 40vh;  /* 40% of viewport height */
           width: 100%;
-          background: url('${process.env.PUBLIC_URL}/background.svg') no-repeat center center;
+          background: url('${process.env.PUBLIC_URL}/background.jpg') no-repeat center center;
           background-size: cover; /* Ensures the image fits without stretching */
           display: flex;
           align-items: center;
