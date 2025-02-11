@@ -10,16 +10,26 @@ export default function Navbar() {
   );
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Update active link based on the route
+  // ✅ Fix: Prevent highlighting Home on Login & Signup pages
   useEffect(() => {
-    const pathMap = {
-      "/": "Home",
-      "/features": "Features",
-      "/dashboard": "Dashboard",
-      "/faqs": "FAQs",
-      "/about": "About",
-    };
-    setActiveLink(pathMap[location.pathname] || "Home");
+    if (location.pathname === "/login" || location.pathname === "/signup") {
+      setActiveLink(""); // No active link when on login/signup
+    } else {
+      const pathMap = {
+        "/": "Home",
+        "/features": "Features",
+        "/dashboard": "Dashboard",
+        "/faqs": "FAQs",
+        "/about": "About",
+      };
+
+      // Use .startsWith() for better matching
+      const matchedLink = Object.keys(pathMap).find((path) =>
+        location.pathname.startsWith(path)
+      );
+
+      setActiveLink(pathMap[matchedLink] || "Home");
+    }
   }, [location.pathname]);
 
   // Handle Logout
