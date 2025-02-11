@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../App.css";
 
 export default function Login() {
@@ -6,20 +7,23 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await fetch("https://mujtpcbackend.shivamrajdubey.tech/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://mujtpcbackend.shivamrajdubey.tech/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await response.json();
-      
+
       if (response.ok) {
         localStorage.setItem("token", data.token); // Store JWT token
         alert("Login successful!");
@@ -49,6 +53,7 @@ export default function Login() {
               required
             />
           </div>
+
           <div className="mb-3 password-wrapper">
             <label className="form-label">Password</label>
             <div className="position-relative">
@@ -68,8 +73,19 @@ export default function Login() {
               </span>
             </div>
           </div>
-          <button type="submit" className="btn btn-warning w-100">Login</button>
+
+          <div className="d-flex justify-content-between mb-3 auth-links">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </div>
+
+          <button type="submit" className="btn btn-warning w-100">
+            Login
+          </button>
         </form>
+
+        <p className="text-center mt-3 auth-links">
+          Don't have an account? <Link to="/signup">Sign up here</Link>
+        </p>
       </div>
     </div>
   );

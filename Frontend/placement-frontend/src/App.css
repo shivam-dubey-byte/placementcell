@@ -1,6 +1,6 @@
 /* Centered Auth Block */
 .auth-wrapper {
-  background: url("../public/muj.svg") no-repeat center center/cover;/*background.jpg*/
+  background: url("../public/muj.svg") no-repeat center center/cover;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -9,59 +9,91 @@
 
 /* Blurred, Rounded Auth Box */
 .auth-box {
-  background: rgba(255, 255, 255, 0.2); /* Blurred Glass Effect */
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.3); /* Increased opacity for readability */
+  backdrop-filter: blur(8px); /* Slightly reduced blur */
   padding: 2rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   width: 100%;
   max-width: 400px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Style form elements */
+/* Form Labels */
+.form-label {
+  font-weight: 600;
+  color: #222; /* Darker text for readability */
+}
+
+/* Input Fields */
 .form-control {
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   padding: 10px;
+  color: black;
+}
+
+.form-control::placeholder {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 /* Password Field Wrapper */
 .password-wrapper {
   position: relative;
   display: flex;
-  flex-direction: column; /* Ensures label is above input */
+  flex-direction: column;
 }
 
 /* Password Input */
 .password-wrapper .form-control {
-  padding-right: 40px; /* Space for eye icon */
+  padding-right: 40px;
 }
 
 /* Password Toggle (Eye Icon) */
 .password-toggle {
   position: absolute;
   right: 12px;
-  top: 50%; /* Keep it at middle */
+  top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #333;
+  color: #444;
   font-size: 18px;
 }
 
 .password-toggle:hover {
-  color: #555;
+  color: #666;
 }
 
 /* Yellow Button */
 .btn-warning {
   color: black;
-  background-color: #ffc107;
+  background-color: #ffc107; /* Keeping original yellow */
   border: none;
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
 }
 
 /* Button Hover Effect */
 .btn-warning:hover {
   background-color: #ffca2c;
+}
+
+/* Forgot Password and Sign Up Links */
+.auth-links {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.auth-links a {
+  color: #ff7f00; /* Orange shade for links */
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.auth-links a:hover {
+  color: #e66b00; /* Darker orange on hover */
+  text-decoration: underline;
 }
 
 /* Responsive Adjustments */
