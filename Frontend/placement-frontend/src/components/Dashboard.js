@@ -1,12 +1,13 @@
 import React from "react";
+import DashboardSidebar from "../components/DashboardSidebar";
 
-const Dashboard = () => {
+export default function Dashboard() {
   return (
-    <div className="container mt-4">
-      <h2>Dashboard</h2>
-      <p>Welcome to your dashboard.</p>
+    <div className="dashboard-container">
+      <DashboardSidebar />
+      <div className="dashboard-content">
+        <h2>Dashboard Content</h2>
+      </div>
     </div>
   );
-};
-
-export default Dashboard;
+}

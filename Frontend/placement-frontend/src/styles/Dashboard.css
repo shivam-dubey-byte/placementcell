@@ -1,0 +1,21 @@
+.dashboard-sidebar {
+    width: 250px;
+    background: #343a40;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    margin-left: 250px;
+  }
+  
+  .dashboard-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
