@@ -1,47 +1,44 @@
 import React, { useState } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 import "../App.css";
 
 export default function Signup() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
     try {
-      // Signup API request
-      const signupResponse = await axios.post("https://mujtpcbackend.shivamrajdubey.tech/auth/signup", {
-        //name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (signupResponse.status === 201) {
-        const loginResponse = await axios.post(
-          "https://mujtpcbackend.shivam…y.tech/auth/login",
-          { email: formData.email, password: formData.password },
-          { headers: { "Content-Type": "application/json" }, withCredentials: true }
-        );
-        
-        if (loginResponse.status === 200) {
-          Cookies.set("token", loginResponse.data.token, { expires: 7 });
-          window.location.href = "/dashboard"; // Redirect after login
+      const response = await fetch(
+        "https://mujtpcbackend.shivamrajdubey.tech/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
         }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Signup successful! Please log in.");
+      } else {
+        setError(data.message || "Signup failed.");
       }
-    } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      alert("Signup or Login failed!");
+    } catch (err) {
+      setError("Something went wrong. Try again later.");
     }
   };
 
@@ -49,52 +46,68 @@ export default function Signup() {
     <div className="auth-wrapper">
       <div className="auth-box">
         <h2 className="text-center mb-4">Sign Up</h2>
-        <form onSubmit={handleSubmit}>
+        {message && <p className="text-success">{message}</p>}
+        {error && <p className="text-danger">{error}</p>}
+        <form onSubmit={handleSignup}>
           <div className="mb-3">
             <label className="form-label">Full Name</label>
             <input
               type="text"
-              name="name"
               className="form-control"
               placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleChange}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
+
           <div className="mb-3">
-            <label className="form-label">Email address</label>
+            <label className="form-label">Email Address</label>
             <input
               type="email"
-              name="email"
               className="form-control"
-              placeholder="Enter email"
-              value={formData.email}
-              onChange={handleChange}
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
+
           <div className="mb-3 password-wrapper">
             <label className="form-label">Password</label>
-            <div className="position-relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                className="form-control"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <span
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "🙈" : "👁️"}
-              </span>
-            </div>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
-          <button type="submit" className="btn btn-warning w-100">Sign Up</button>
+
+          <div className="mb-3 password-wrapper">
+            <label className="form-label">Confirm Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-warning w-100">
+            Sign Up
+          </button>
+
+          {/* Add spacing between button and login link */}
+          <p className="auth-links mt-4">
+            Already have an account?{" "}
+            <Link to="/login" className="auth-link">
+              Login here
+            </Link>
+          </p>
         </form>
       </div>
     </div>
