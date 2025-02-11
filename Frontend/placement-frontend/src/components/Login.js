@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // Correct import
 import "../App.css";
 
 export default function Login() {
@@ -7,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,9 +27,22 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token); // Store JWT token
+        const token = data.token;
+        localStorage.setItem("token", token); // Save token
+
+        // Decode JWT token to extract user details
+        const decoded = jwtDecode(token); // Use jwtDecode instead of jwt_decode
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            name: decoded.name,
+            email: decoded.email,
+            role: decoded.role,
+          })
+        );
+
         alert("Login successful!");
-        window.location.href = "/dashboard"; // Redirect user
+        navigate("/dashboard"); // Redirect user
       } else {
         setError(data.message || "Invalid credentials");
       }
