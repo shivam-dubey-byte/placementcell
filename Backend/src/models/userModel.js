@@ -4,12 +4,12 @@ const connectDB = require('../connectDB');
 const { console } = require('inspector');
 
 // Function to create a new user in the database
-const createUser = async (name,email, password) => {
+const createUser = async (name,email, password,role) => {
   const db = await connectDB("user");
   const collection = db.collection('users');  // 'users' is your MongoDB collection
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = { name,email, password: hashedPassword };
+  const user = { name,email, password: hashedPassword,role };
 
   // Insert the new user into the database
   const result = await collection.insertOne(user);
