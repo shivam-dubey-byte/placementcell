@@ -1,77 +1,156 @@
+/* Dashboard Layout */
 .dashboard-layout {
   display: flex;
-  height: 100vh;
+  height: 100vh; /* Full height of the viewport */
+}
+
+/* Navbar Styling */
+.dashboard-navbar {
+  position: fixed; /* Fix navbar at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1002; /* Ensure it's above the sidebar and dropdown */
+}
+
+/* Navbar Dropdown Styling */
+.dashboard-navbar-dropdown {
+  z-index: 1003; /* Ensure dropdown is above the sidebar */
 }
 
 /* Sidebar Styling */
 .dashboard-sidebar {
   width: 250px;
-  background: #2c3e50;
+  background: #2c3e50; /* Dark sidebar background */
   color: white;
+  transition: transform 0.3s ease-in-out;
+  position: fixed; /* Make sidebar fixed */
+  top: 60px; /* Stick below the navbar */
+  height: calc(100vh - 60px); /* Full height minus navbar */
+  z-index: 1000; /* Ensure it's below the navbar dropdown */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  overflow-y: auto; /* Make sidebar scrollable */
+}
+
+.dashboard-sidebar.collapsed {
+  transform: translateX(-250px); /* Hide sidebar off-screen */
+}
+
+.dashboard-sidebar-content {
   padding: 20px;
-  position: fixed;
-  top: 0;
-  left: -250px; /* Initially hidden */
-  height: 100%;
-  transition: left 0.3s ease-in-out;
+  padding-top: 60px; /* Shift content down to avoid overlap with cross button */
 }
 
-.dashboard-sidebar.open {
-  left: 0;
-}
-
-.dashboard-nav-links {
-  padding: 0;
+.dashboard-sidebar-links {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.dashboard-nav-links li {
-  padding: 15px;
-}
-
-.dashboard-nav-links li a {
+.dashboard-sidebar-item {
+  padding: 10px;
   color: white;
-  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
   display: flex;
   align-items: center;
+  gap: 10px;
+  border-radius: 4px; /* Rounded corners */
 }
 
-.dashboard-nav-links li a svg {
-  margin-right: 10px;
+.dashboard-sidebar-item:hover {
+  background: #34495e; /* Hover effect */
 }
 
-/* Toggle Button (Hamburger Menu) */
-.dashboard-toggle-btn {
-  position: fixed;
-  bottom: 20px;  /* Placed at bottom */
-  left: 20px;
-  background: #ffc107;
+.dashboard-sidebar-icon {
+  font-size: 20px;
+}
+
+.dashboard-sidebar-text {
+  font-size: 16px;
+}
+
+/* Cross Button Styling */
+.dashboard-sidebar-close {
+  background: none;
   border: none;
-  color: black;
+  color: white;
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
+  position: absolute; /* Position the cross button */
+  top: 10px; /* Adjust position from the top */
+  right: 10px; /* Adjust position from the right */
+  z-index: 1001; /* Ensure it's above the sidebar */
+  background: rgba(255, 255, 255, 0.1); /* Light background */
+  border-radius: 50%; /* Circular button */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
-.dashboard-toggle-btn:hover {
-  background: #e0a800;
+.dashboard-sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.2); /* Hover effect */
 }
 
-/* Rotate animation */
-.dashboard-toggle-btn svg {
-  transition: transform 0.3s ease;
+/* Toggle Button Styling */
+.dashboard-sidebar-toggle {
+  background: none;
+  border: none;
+  color: #2c3e50; /* Dark color for visibility */
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: fixed; /* Position the toggle button */
+  top: 70px; /* Adjust position below the navbar */
+  left: 20px; /* Adjust position from the left */
+  z-index: 1001; /* Ensure it's above the sidebar */
+  background: rgba(255, 255, 255, 0.9); /* Light background */
+  border-radius: 50%; /* Circular button */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
-.dashboard-toggle-btn:hover svg {
-  transform: rotate(180deg);
+.dashboard-sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 1); /* Hover effect */
 }
 
-/* Main Content */
+/* Main Content Styling */
 .dashboard-main-content {
   flex-grow: 1;
   padding: 20px;
-  margin-left: 60px; /* Avoid covering navbar */
-  background: #f4f4f4;
+  background: #f4f4f4; /* Light background for main content */
+  margin-left: 250px; /* Default margin for desktop */
+  transition: margin-left 0.3s ease-in-out, filter 0.3s ease-in-out;
+  overflow-y: auto; /* Make main content scrollable */
+  height: calc(100vh - 60px); /* Full height minus navbar */
+  margin-top: 60px; /* Start below the navbar */
+}
+
+.dashboard-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Blur effect only on mobile/tablet when sidebar is open */
+@media (max-width: 768px) {
+  .dashboard-main-content.shifted {
+    margin-left: 250px; /* Shift content to the right */
+    filter: blur(2px); /* Add blur effect */
+    pointer-events: none; /* Disable interaction when sidebar is open */
+  }
+
+  .dashboard-main-content:not(.shifted) {
+    margin-left: 0; /* Full width when sidebar is collapsed */
+    filter: none; /* Remove blur effect */
+    pointer-events: auto; /* Enable interaction */
+  }
 }

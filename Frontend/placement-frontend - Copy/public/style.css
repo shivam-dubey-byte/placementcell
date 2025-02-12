@@ -1,0 +1,37 @@
+/* styles.css */
+.playfair-display-navbar {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 700; /* Adjust the weight as needed (400 to 900) */
+  font-style: normal;
+}
+
+.custom-navbar {
+  background-color: #e3f2fd;
+}
+
+/* Custom color for buttons */
+.btn1-custom {
+  background-color: #d5642d;
+  border-color: #d5642d;
+  color: white;
+}
+
+.btn1-custom:hover {
+  background-color: #c45a27;
+  border-color: #c45a27;
+}
+
+.btn1-outline-custom {
+  color: #d5642d;
+  border-color: #d5642d;
+}
+
+.btn1-outline-custom:hover {
+  background-color: #d5642d;
+  color: white;
+}
+
+.active-custom {
+  color: #d5652c;
+}

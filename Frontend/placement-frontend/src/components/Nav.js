@@ -182,7 +182,7 @@ export default function Navbar() {
           background: white;
           padding: 20px;
           box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 1001;
+          z-index: 1000;
         }
         .close-btn {
           font-size: 2rem;
