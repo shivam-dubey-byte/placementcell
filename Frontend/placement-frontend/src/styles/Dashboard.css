@@ -155,3 +155,52 @@
     pointer-events: auto; /* Enable interaction */
   }
 }
+
+
+/* Recent Activities */
+.recent-activities p {
+  margin: 10px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Application Status */
+.status {
+  font-weight: bold;
+}
+
+.status.pending {
+  color: #ff9800; /* Orange for pending */
+}
+
+.status.approved {
+  color: #4caf50; /* Green for approved */
+}
+
+/* Upcoming Deadlines */
+.deadlines p {
+  margin: 10px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.action-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
