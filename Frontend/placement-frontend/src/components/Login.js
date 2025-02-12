@@ -42,6 +42,10 @@ export default function Login() {
         );
 
         alert("Login successful!");
+        // Show user details in alert
+          // Retrieve user data from localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
+      alert(`Login successful!\nName: ${user.name}\nRole: ${user.role}`);
         navigate("/dashboard"); // Redirect user
       } else {
         setError(data.message || "Invalid credentials");
