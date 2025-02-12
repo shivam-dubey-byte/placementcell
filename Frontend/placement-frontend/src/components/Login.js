@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Correct import
+import { jwtDecode } from "jwt-decode";
 import "../App.css";
 
 export default function Login() {
@@ -8,11 +8,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch(
@@ -24,34 +27,53 @@ export default function Login() {
         }
       );
 
-      const data = await response.json();
+      // Read response as text first
+      const textResponse = await response.text();
+      console.log("Raw API Response:", textResponse); // Debugging API response
+
+      let data;
+      try {
+        data = JSON.parse(textResponse); // Ensure valid JSON
+      } catch (err) {
+        throw new Error("Invalid JSON format received from API.");
+      }
 
       if (response.ok) {
-        const token = data.token;
-        localStorage.setItem("token", token); // Save token
+        if (!data.token) {
+          throw new Error("Token not found in API response.");
+        }
 
-        // Decode JWT token to extract user details
-        const decoded = jwtDecode(token); // Use jwtDecode instead of jwt_decode
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            name: decoded.name,
-            email: decoded.email,
-            role: decoded.role,
-          })
-        );
+        localStorage.setItem("token", data.token);
+        console.log("Token stored:", localStorage.getItem("token"));
 
-        alert("Login successful!");
-        // Show user details in alert
-          // Retrieve user data from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
-      alert(`Login successful!\nName: ${user.name}\nRole: ${user.role}`);
-        navigate("/dashboard"); // Redirect user
+        // Decode token safely
+        try {
+          const decoded = jwtDecode(data.token);
+          console.log("Decoded Token:", decoded);
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              name: decoded.name,
+              email: decoded.email,
+              role: decoded.role,
+            })
+          );
+        } catch (decodeError) {
+          throw new Error("Error decoding JWT token.");
+        }
+
+        setLoading(false);
+        setSuccess(true);
+        setTimeout(() => navigate("/dashboard"), 1500);
       } else {
         setError(data.message || "Invalid credentials");
+        setLoading(false);
       }
     } catch (err) {
-      setError("Something went wrong. Try again later.");
+      console.error("Login Error:", err.message);
+      setError(err.message || "Something went wrong. Try again later.");
+      setLoading(false);
     }
   };
 
@@ -97,8 +119,14 @@ export default function Login() {
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
 
-          <button type="submit" className="btn btn-warning w-100">
-            Login
+          <button type="submit" className="btn btn-warning w-100" disabled={loading}>
+            {loading ? (
+              <span className="spinner-border spinner-border-sm text-light"></span>
+            ) : success ? (
+              "✅ Verified"
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 

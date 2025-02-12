@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import "../App.css";
 
 export default function Signup() {
@@ -25,6 +26,7 @@ export default function Signup() {
     }
 
     try {
+      // **Signup API Request**
       const signupResponse = await fetch(
         "https://mujtpcbackend.shivamrajdubey.tech/auth/signup",
         {
@@ -34,14 +36,22 @@ export default function Signup() {
         }
       );
 
-      const signupData = await signupResponse.json();
+      const signupText = await signupResponse.text(); // Read raw response
+      console.log("Signup Response Text:", signupText);
+
+      if (!signupText) {
+        setError("Unexpected empty response from server.");
+        return;
+      }
+
+      const signupData = JSON.parse(signupText); // Parse JSON safely
 
       if (!signupResponse.ok) {
         setError(signupData.message || "Signup failed.");
         return;
       }
 
-      // If signup is successful, proceed with login
+      // **Login API Request After Signup**
       const loginResponse = await fetch(
         "https://mujtpcbackend.shivamrajdubey.tech/auth/login",
         {
@@ -51,21 +61,40 @@ export default function Signup() {
         }
       );
 
-      const loginData = await loginResponse.json();
+      const loginText = await loginResponse.text();
+      console.log("Login Response Text:", loginText);
+
+      if (!loginText) {
+        setError("Unexpected empty response from server.");
+        return;
+      }
+
+      const loginData = JSON.parse(loginText);
 
       if (!loginResponse.ok) {
         setError(loginData.message || "Login failed.");
         return;
       }
 
-      // Store the token in localStorage
+      // **Store token & user data in localStorage**
       localStorage.setItem("token", loginData.token);
-      localStorage.setItem("user", JSON.stringify(loginData.user));
+      const decoded = jwtDecode(loginData.token);
+      console.log("Decoded Token:", decoded);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: decoded.name,
+          email: decoded.email,
+          role: decoded.role,
+        })
+      );
+      //localStorage.setItem("user", JSON.stringify(loginData.user));
 
       setMessage("Signup & Login successful! Redirecting...");
-      setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2 seconds
+      setTimeout(() => navigate("/dashboard"), 2000);
 
     } catch (err) {
+      console.error("Error:", err);
       setError("Something went wrong. Try again later.");
     }
   };
@@ -148,8 +177,7 @@ export default function Signup() {
           </button>
 
           <p className="text-center mt-3 auth-links">
-            Already have an account?{" "}
-            <Link to="/login">Login here</Link>
+            Already have an account? <Link to="/login">Login here</Link>
           </p>
         </form>
       </div>
