@@ -79,11 +79,8 @@ const Dashboard = ({ userType }) => {
           </ul>
         </div>
       </div>
-
-      {/* Main Content */}
-      <div className={`dashboard-main-content ${isSidebarOpen && isMobile ? "shifted" : ""}`}>
-        {/* Toggle button for mobile/tablet */}
-        {isMobile && !isSidebarOpen && (
+      {/* Toggle button for mobile/tablet */}
+      {isMobile && !isSidebarOpen && (
           <button
             className="dashboard-sidebar-toggle"
             onClick={() => setIsSidebarOpen(true)}
@@ -91,6 +88,9 @@ const Dashboard = ({ userType }) => {
             ☰
           </button>
         )}
+      {/* Main Content */}
+      <div className={`dashboard-main-content ${isSidebarOpen && isMobile ? "shifted" : ""}`}>
+        <br/>
         <h2>{userType === "admin" ? "Admin Dashboard" : "Student Dashboard"}</h2>
         <p>Welcome! Manage your tasks efficiently.</p>
         {/* Add role-specific content here */}
@@ -103,6 +103,8 @@ const Dashboard = ({ userType }) => {
               <li>Send Emails</li>
             </ul>
           </div>
+          
+          
         )}
         {userType === "student" && (
           <div className="dashboard-content">

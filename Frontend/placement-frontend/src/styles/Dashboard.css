@@ -2,6 +2,7 @@
 .dashboard-layout {
   display: flex;
   height: 100vh; /* Full height of the viewport */
+  overflow: hidden; /* Prevent scrolling on the entire layout */
 }
 
 /* Navbar Styling */
