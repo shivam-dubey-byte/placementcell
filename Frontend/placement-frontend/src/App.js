@@ -30,16 +30,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
 
           {/* Protected Routes */}
-          <Route
-            path="/dashboard"
-            element={
-              isAuthenticated ? (
-                <DashboardPage />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
+          <Route path="/dashboard/*" element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" replace />} />
+
 
           {/* 404 Page */}
           <Route path="*" element={<NotFoundPage />} />
