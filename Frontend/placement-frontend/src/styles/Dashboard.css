@@ -134,13 +134,13 @@
 /* Main Content Styling */
 .dashboard-main-content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 30px;
   background: #f4f4f4; /* Light background for main content */
   margin-left: 250px; /* Default margin for desktop */
   transition: margin-left 0.3s ease-in-out, filter 0.3s ease-in-out;
   overflow-y: auto; /* Make main content scrollable */
   height: calc(100vh - 60px); /* Full height minus navbar */
-  margin-top: 60px; /* Start below the navbar */
+  margin-top: 0; /* Start below the navbar */
 }
 
 .dashboard-content {

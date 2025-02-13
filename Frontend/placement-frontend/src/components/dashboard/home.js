@@ -5,7 +5,7 @@ const Home = ({ userType }) => {
     <>
       {/* Main Content */}
       {/*<div className={`dashboard-main-content ${isSidebarOpen && isMobile ? "shifted" : ""}`}>*/}
-        <br />
+        
         <h2>{userType === "admin" ? "Admin Dashboard" : "Student Dashboard"}</h2>
         <p>Welcome! Manage your tasks efficiently.</p>
 
