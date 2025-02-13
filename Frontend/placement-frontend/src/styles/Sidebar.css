@@ -1,0 +1,29 @@
+
+
+/* Separate class for sidebar link text */
+.dashboard-sidebar-link-text {
+  font-size: 16px;
+  /*font-weight: 500;*/
+  color: white;
+  transition: color 0.3s ease-in-out;
+}
+
+
+
+
+.dashboard-sidebar-links a {
+  text-decoration: none; /* Remove underline */
+  display: flex; /* Ensure icon and text align properly */
+  align-items: center;
+  gap: 10px;
+  color: white; /* Ensures the text remains white */
+  width: 100%;
+  padding: 2px 15px 1px 5px;
+  border-radius: 4px;
+  transition: background 0.2s ease-in-out, color 0.3s ease-in-out;
+}
+
+.dashboard-sidebar-links a:hover {
+  background: #34495e;
+  color: #ecf0f1;
+}

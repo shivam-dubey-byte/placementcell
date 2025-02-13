@@ -19,6 +19,8 @@
   z-index: 1003; /* Ensure dropdown is above the sidebar */
 }
 
+
+
 /* Sidebar Styling */
 .dashboard-sidebar {
   width: 250px;
@@ -99,7 +101,7 @@
 
 /* Toggle Button Styling */
 .dashboard-sidebar-toggle {
-  background: none;
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
   border: none;
   color: #2c3e50; /* Dark color for visibility */
   font-size: 1.5rem;
@@ -108,7 +110,6 @@
   top: 70px; /* Adjust position below the navbar */
   left: 20px; /* Adjust position from the left */
   z-index: 1001; /* Ensure it's above the sidebar */
-  background: rgba(255, 255, 255, 0.9); /* Light background */
   border-radius: 50%; /* Circular button */
   width: 40px;
   height: 40px;
@@ -116,11 +117,19 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: background 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth transition */
 }
 
 .dashboard-sidebar-toggle:hover {
-  background: rgba(255, 255, 255, 1); /* Hover effect */
+  background: rgba(255, 255, 255, 1); /* Fully opaque on hover */
+  opacity: 1; /* Ensure full opacity */
 }
+
+
+
+
+
+
 
 /* Main Content Styling */
 .dashboard-main-content {
@@ -155,7 +164,6 @@
     pointer-events: auto; /* Enable interaction */
   }
 }
-
 
 /* Recent Activities */
 .recent-activities p {
@@ -204,3 +212,4 @@
 .action-button:hover {
   background-color: #0056b3;
 }
+
