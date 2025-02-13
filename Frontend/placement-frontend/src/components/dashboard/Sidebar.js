@@ -33,13 +33,17 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, userType, isMobile }) => {
           ✕
         </button>
       )}
-      
+
       {/* Sidebar Links */}
       <div className="dashboard-sidebar-content">
         <ul className="dashboard-sidebar-links">
           {sidebarLinks.map((item, index) => (
             <li key={index} className="dashboard-sidebar-item">
-              <Link to={item.path} className="dashboard-sidebar-link">
+              <Link 
+                to={item.path} 
+                className="dashboard-sidebar-link"
+                onClick={() => isMobile && setIsSidebarOpen(false)} // Close sidebar on click
+              >
                 <span className="dashboard-sidebar-icon">{item.icon}</span>
                 <span className="dashboard-sidebar-link-text">{item.name}</span>
               </Link>
