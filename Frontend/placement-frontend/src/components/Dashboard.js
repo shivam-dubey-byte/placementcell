@@ -46,20 +46,20 @@ const Dashboard = ({ userType }) => {
   const dashboardRoutes = {
     admin: [
       { path: "/", element: <Home userType={userType} /> },
-      { path: "/dashboard/manage-students", element: <ManageStudents /> },
-      { path: "/dashboard/approve-noc", element: <ApproveNOC /> },
-      { path: "/dashboard/approve-lor", element: <ApproveLOR /> },
-      { path: "/dashboard/send-emails", element: <SendEmails /> },
-      { path: "/dashboard/manage-admins", element: <ManageAdmins /> },
-      { path: "/dashboard/file-manager", element: <FileManager /> },
+      { path: "manage-students", element: <ManageStudents /> },
+      { path: "approve-noc", element: <ApproveNOC /> },
+      { path: "approve-lor", element: <ApproveLOR /> },
+      { path: "send-emails", element: <SendEmails /> },
+      { path: "manage-admins", element: <ManageAdmins /> },
+      { path: "file-manager", element: <FileManager /> },
     ],
     student: [
       { path: "/", element: <Home userType={userType} /> },
-      { path: "/dashboard/apply-noc", element: <ApplyNOC /> },
-      { path: "/dashboard/apply-lor", element: <ApplyLOR /> },
-      { path: "/dashboard/upload-resume", element: <UploadResume /> },
-      { path: "/dashboard/profile", element: <Profile /> },
-      { path: "/dashboard/settings", element: <Settings /> },
+      { path: "apply-noc", element: <ApplyNOC /> },
+      { path: "apply-lor", element: <ApplyLOR /> },
+      { path: "upload-resume", element: <UploadResume /> },
+      { path: "profile", element: <Profile /> },
+      { path: "settings", element: <Settings /> },
     ],
   };
 

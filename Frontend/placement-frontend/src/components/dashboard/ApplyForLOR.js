@@ -5,6 +5,12 @@ const ApplyForLOR = () => {
     <div>
       <h2>Apply for LOR</h2>
       <p>Submit requests for LOR.</p>
+      <h2>Apply for LOR</h2>
+      <p>Submit requests for LOR.</p>
+      <h2>Apply for LOR</h2>
+      <p>Submit requests for LOR.</p>
+      
+
     </div>
   );
 };
