@@ -10,7 +10,6 @@ export default function Navbar() {
   );
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // ✅ Fix: Correctly highlight the active link
   useEffect(() => {
     const pathMap = {
       "/": "Home",
@@ -20,13 +19,10 @@ export default function Navbar() {
       "/about": "About",
     };
 
-    // Find exact match instead of using .startsWith()
     const matchedLink = Object.keys(pathMap).find((path) => location.pathname === path);
-
     setActiveLink(pathMap[matchedLink] || "");
   }, [location.pathname]);
 
-  // Handle Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -34,7 +30,6 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  // Handle Dashboard Click - Redirect if not logged in
   const handleDashboardClick = (e) => {
     if (!isAuthenticated) {
       e.preventDefault();
@@ -42,15 +37,13 @@ export default function Navbar() {
     }
   };
 
-  // Determine if the current route is the dashboard
   const isDashboard = location.pathname === "/dashboard";
 
   return (
     <>
       {/* Navbar */}
-      <nav className={`navbar navbar-light bg-light px-3 ${isDashboard ? "fixed-nav" : "scroll-nav"} ${menuOpen ? "navbar-blur" : ""}`}>
+      <nav className={`navbar navbar-light bg-light px-3 ${isDashboard ? "fixed-nav" : ""} ${menuOpen ? "navbar-blur" : ""}`}>
         <div className="container-fluid">
-          {/* Logo & Title */}
           <Link className="navbar-brand d-flex align-items-center" to="/">
             <img
               src={`${process.env.PUBLIC_URL}/mujlogo.png`}
@@ -62,7 +55,6 @@ export default function Navbar() {
             </h1>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="d-none d-lg-flex mx-auto">
             <ul className="navbar-nav d-flex flex-row gap-3">
               {["Home", "Features", "Dashboard", "FAQs", "About"].map((name) => (
@@ -86,7 +78,6 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Right-Side Buttons */}
           <div className="d-none d-lg-flex gap-2">
             {!isAuthenticated ? (
               <>
@@ -104,18 +95,16 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Hamburger Menu */}
-          <button
-            className="navbar-toggler d-lg-none"
-            type="button"
-            onClick={() => setMenuOpen(true)}
-          >
+          <button className="navbar-toggler d-lg-none" type="button" onClick={() => setMenuOpen(true)}>
             <span className="navbar-toggler-icon"></span>
           </button>
         </div>
       </nav>
 
-      {/* Mobile Sidebar Menu */}
+      {/* Space to avoid content overlap when navbar is fixed */}
+      {isDashboard && <div className="fixed-nav-placeholder"></div>}
+
+      {/* Mobile Sidebar */}
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
         <div className="sidebar">
           <button className="close-btn" onClick={() => setMenuOpen(false)}>
@@ -136,7 +125,7 @@ export default function Navbar() {
                   }}
                   onClick={(e) => {
                     if (name === "Dashboard") handleDashboardClick(e);
-                    setMenuOpen(false); // Close menu instantly
+                    setMenuOpen(false);
                   }}
                 >
                   {name}
@@ -164,7 +153,7 @@ export default function Navbar() {
         <div className="blur-bg" onClick={() => setMenuOpen(false)}></div>
       </div>
 
-      {/* Styles for Sidebar and Blur Effect */}
+      {/* Styles */}
       <style>
         {`
         .mobile-menu {
@@ -175,7 +164,7 @@ export default function Navbar() {
           height: 100%;
           transition: right 0.4s ease-in-out;
           display: flex;
-          z-index: 1050; /* Higher than navbar */
+          z-index: 1050;
         }
         .mobile-menu.open {
           right: 0;
@@ -186,7 +175,7 @@ export default function Navbar() {
           background: white;
           padding: 20px;
           box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 1051; /* Higher than mobile-menu */
+          z-index: 1051;
         }
         .close-btn {
           font-size: 2rem;
@@ -201,19 +190,21 @@ export default function Navbar() {
           backdrop-filter: blur(8px);
           background: rgba(0, 0, 0, 0.3);
           cursor: pointer;
-          z-index: 1050; /* Same as mobile-menu */
+          z-index: 1050;
         }
         .fixed-nav {
           position: fixed;
           top: 0;
           width: 100%;
-          z-index: 1000; /* Lower than mobile-menu */
+          z-index: 1000;
+          background: white;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .scroll-nav {
-          position: static;
+        .fixed-nav-placeholder {
+          height: 70px;
         }
         .navbar-blur {
-          backdrop-filter: blur(5px); /* Optional: Add blur effect to navbar when sidebar is open */
+          backdrop-filter: blur(5px);
         }
         `}
       </style>
