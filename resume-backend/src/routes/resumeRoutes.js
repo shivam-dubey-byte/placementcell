@@ -7,7 +7,7 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
 router.post("/upload-resume", extractEmail, upload.single("resume"), uploadResume);
-//router.post("/update-resume", extractEmail, upload.single("resume"), handleUpdateResume);
-//router.get("/get-resume", extractEmail, getResume);
+router.post("/update-resume", extractEmail, upload.single("resume"), handleUpdateResume);
+router.get("/get-resume", extractEmail, getResume);
 
 module.exports = router;
