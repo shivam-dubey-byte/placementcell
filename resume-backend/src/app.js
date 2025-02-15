@@ -37,7 +37,7 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // Routes
-app.use("/api/resume", resumeRoutes);
+//app.use("/api/resume", resumeRoutes);
 
 
 module.exports = app;
