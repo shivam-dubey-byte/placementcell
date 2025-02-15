@@ -32,10 +32,6 @@ app.get('/', (req, res) => {
 
 
 
-// Middleware
-app.use(cors({ origin: "*" }));
-app.use(express.json());
-
 // Routes
 //app.use("/api/resume", resumeRoutes);
 
