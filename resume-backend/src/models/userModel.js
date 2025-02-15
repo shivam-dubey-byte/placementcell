@@ -1,29 +1,49 @@
-const { MongoClient } = require("mongodb");
-const connectDB = require("../connectDB");
+const { MongoClient } = require('mongodb');
+const bcrypt = require('bcryptjs');
+const connectDB = require('../connectDB');
+const { console } = require('inspector');
 
-// Upload Resume Data
-const uploadResumeData = async (email, resume) => {
-  const db = await connectDB("userdata");
-  const collection = db.collection("resume");
-  const add = { email, resume };
-  const result = await collection.insertOne(add);
-  return result;
+// Function to create a new user in the database
+const createUser = async (name,email, password,role) => {
+  const db = await connectDB("user");
+  const collection = db.collection('users');  // 'users' is your MongoDB collection
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = { name,email, password: hashedPassword,role };
+
+  // Insert the new user into the database
+  const result = await collection.insertOne(user);
+  return result.insertedId;
 };
 
-// Find User's Resume
-const findUserResume = async (email) => {
-  const db = await connectDB("userdata");
-  const collection = db.collection("resume");
+// Function to find a user by email
+const findUserByEmail = async (email) => {
+  const db = await connectDB("user");
+  const collection = db.collection('users');
+
   const user = await collection.findOne({ email });
   return user;
 };
 
-// Update Resume
-const updateResume = async (email, resume) => {
-  const db = await connectDB("userdata");
-  const collection = db.collection("resume");
-  const result = await collection.updateOne({ email }, { $set: { resume } });
+// Function to compare password
+const comparePassword = async (password, hashedPassword) => {
+  return bcrypt.compare(password, hashedPassword);
+};
+
+const findUserById = async (id) => {
+  const db = await connectDB("user");
+  const collection = db.collection('users');
+  const user = await collection.findOne({ _id: id });
+  return user;
+};
+
+const updatePassword = async (id, pass) => {
+  const db = await connectDB("user");
+  const collection = db.collection('users');
+  const password = await bcrypt.hash(pass, 10);
+  console.log(password);
+  const result = await collection.updateOne({ _id: id }, { $set: { password}});
   return result;
 };
 
-module.exports = { uploadResumeData, findUserResume, updateResume };
+module.exports = { createUser, findUserByEmail, comparePassword, findUserById,updatePassword };
