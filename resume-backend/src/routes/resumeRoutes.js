@@ -4,7 +4,7 @@ const router = express.Router();
 //const { uploadResume, handleUpdateResume, getResume } = require("../controllers/resumeController");
 const multer = require("multer");
 
-//const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "uploads/" });
 
 //router.post("/upload-resume", extractEmail, upload.single("resume"), uploadResume);
 //router.post("/update-resume", extractEmail, upload.single("resume"), handleUpdateResume);
