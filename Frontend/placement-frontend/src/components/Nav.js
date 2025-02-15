@@ -6,10 +6,31 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("token") ? true : false
+    localStorage.getItem("token_expiry") ? true : false
   );
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const expiry = localStorage.getItem("token_expiry");
+  
+      if (!expiry || Date.now() > parseInt(expiry)) {
+        // Token expired, logout the user
+        localStorage.removeItem("token");
+        localStorage.removeItem("token_expiry");
+        setIsAuthenticated(false);
+      } else {
+        setIsAuthenticated(true);
+      }
+    };
+  
+    checkAuthStatus(); // Run on mount
+  
+    const interval = setInterval(checkAuthStatus, 60000); // Check every 1 min
+  
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+  
   useEffect(() => {
     const pathMap = {
       "/": "Home",
@@ -26,6 +47,7 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("token_expiry");
     setIsAuthenticated(false);
     navigate("/login");
   };

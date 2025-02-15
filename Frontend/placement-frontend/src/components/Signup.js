@@ -78,6 +78,7 @@ export default function Signup() {
 
       // **Store token & user data in localStorage**
       localStorage.setItem("token", loginData.token);
+      localStorage.setItem("token_expiry", Date.now() + 60 * 60 * 1000);
       const decoded = jwtDecode(loginData.token);
       console.log("Decoded Token:", decoded);
       localStorage.setItem(

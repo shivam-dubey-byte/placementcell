@@ -44,6 +44,7 @@ export default function Login() {
         }
 
         localStorage.setItem("token", data.token);
+        localStorage.setItem("token_expiry", Date.now() + 60 * 60 * 1000);
         console.log("Token stored:", localStorage.getItem("token"));
 
         // Decode token safely
