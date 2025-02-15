@@ -18,7 +18,7 @@ let items = [
   { id: 1, name: 'Item 1' },
   { id: 2, name: 'Item 2' },
 ];
-//app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.json(items);
