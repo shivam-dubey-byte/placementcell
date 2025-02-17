@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 //const { extractEmail } = require("../middleware/authMiddleware");
-/*const { extractEmail } = require("../middleware/authMiddleware");
+const { extractEmail } = require("../middleware/authMiddleware");
 const {
     addActiveRequest,
     getActiveRequest,
@@ -18,5 +18,5 @@ router.delete("/active-request", extractEmail, deleteActiveRequest); // Email fr
 // History Routes
 router.post("/history", extractEmail, addHistory); // Email from token
 router.get("/history", extractEmail, getHistory); // Email from body
-*/
+
 module.exports = router;
