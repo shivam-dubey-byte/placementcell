@@ -13,7 +13,14 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-
+let items = [
+  { id: 1, name: 'Item 1' },
+  { id: 2, name: 'Item 2' },
+];
+app.get('/', (req, res) => {
+  //res.json(items);
+  res.send('Request Backend Working');
+});
 app.use("/api", routes);
 
 connectDB();
