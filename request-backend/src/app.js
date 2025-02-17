@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const connectDB = require("./connectDB");
 
-const resumeRoutes = require("./routes/requestRoutes");
+const requestRoutes = require("./routes/requestRoutes");
 
 const app = express();
 app.use(express.json());
@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   //res.json(items);
   res.send('Request Backend Working');
 });
-app.use("/api", routes);
+app.use("/api", requestRoutes);
 
 //connectDB();
 //https://docs.google.com/forms/d/e/1FAIpQLSdfkgQU261P8_KezoMyQw_xBctCQfr5sp4S-TmPB26eBK99CQ/
