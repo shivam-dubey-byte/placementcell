@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/Form1.css";
+import axios from "axios"; // Import axios for making HTTP requests
 
 const ApplyForNOC = () => {
   const [formData, setFormData] = useState({
@@ -24,10 +25,46 @@ const ApplyForNOC = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("NOC Application Submitted:", formData);
-    alert("NOC application submitted successfully!");
+
+    // Get the token from localStorage or wherever it is stored
+    const token = localStorage.getItem("token"); // Replace with your actual token retrieval logic
+
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
+    // Prepare the data to send in the request body
+    const requestData = {
+      message: formData.reason, // Use the reason as the message
+      noc: "1", // Set noc to "1" as required
+    };
+
+    try {
+      // Send the POST request
+      const response = await axios.post(
+        "https://resumemujtpc.shivamrajdubey.tech/api/active-request",
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+
+      // Handle the response
+      if (response.status === 201) {
+        alert("NOC application submitted successfully!");
+        console.log("Response:", response.data);
+      } else {
+        alert("Failed to submit NOC application.");
+      }
+    } catch (error) {
+      console.error("Error submitting NOC application:", error);
+      alert("An error occurred while submitting the NOC application.");
+    }
   };
 
   return (
