@@ -2,9 +2,9 @@ const { MongoClient } = require("mongodb");
 const connectDB = require("../connectDB");
 
 // Add data to ActiveRequest
-const addToActiveRequest = async (email, message, noc = "NUL", lor = "NUL", time) => {
+const addToActiveRequest = async (email, message, noc = "0", lor = "0", time) => {
     const db = await connectDB("RequestData");
-    const collection = db.collection("ActiveRequest");
+    const collection = db.collection("Activerequest");
     const result = await collection.insertOne({ email, message, noc, lor, time });
     return result;
 };
@@ -12,7 +12,7 @@ const addToActiveRequest = async (email, message, noc = "NUL", lor = "NUL", time
 // Fetch data from ActiveRequest with pagination
 const fetchFromActiveRequest = async (email, page = 0, limit = 5) => {
     const db = await connectDB("RequestData");
-    const collection = db.collection("ActiveRequest");
+    const collection = db.collection("Activerequest");
     const data = await collection.find({ email })
                                  .skip(page * limit)
                                  .limit(limit)
@@ -23,13 +23,13 @@ const fetchFromActiveRequest = async (email, page = 0, limit = 5) => {
 // Remove data from ActiveRequest based on email and LOR or NOC
 const removeFromActiveRequest = async (email, field) => {
     const db = await connectDB("RequestData");
-    const collection = db.collection("ActiveRequest");
+    const collection = db.collection("Activerequest");
     const result = await collection.deleteOne({ email, [field]: { $ne: "NUL" } });
     return result;
 };
 
 // Add data to History
-const addToHistory = async (email, message, noc = "NUL", lor = "NUL", time) => {
+const addToHistory = async (email, message, noc = "NULL", lor = "NULL", time) => {
     const db = await connectDB("RequestData");
     const collection = db.collection("History");
     const result = await collection.insertOne({ email, message, noc, lor, time });

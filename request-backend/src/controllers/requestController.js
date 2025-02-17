@@ -8,9 +8,10 @@ const {
 
 // Add data to ActiveRequest (email from token)
 const addActiveRequest = async (req, res) => {
-    const { email } = req.user; // Email extracted from token
+    console.log(req.email);
+    const email = req.email; // Email extracted from token
     const { message, noc = "NUL", lor = "NUL", time } = req.body;
-
+    console.log(email);
     try {
         const newRequest = await addToActiveRequest(email, message, noc, lor, time);
         res.status(201).json({ message: 'Data added to ActiveRequest', request: newRequest });
