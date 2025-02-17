@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const connectDB = require("./connectDB");
 
-const resumeRoutes = require("./routes/routes");
+const resumeRoutes = require("./routes/requestRoutes");
 
 const app = express();
 app.use(express.json());
