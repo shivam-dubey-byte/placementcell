@@ -23,6 +23,6 @@ app.get('/', (req, res) => {
 });
 app.use("/api", requestRoutes);
 
-//connectDB();
+connectDB();
 //https://docs.google.com/forms/d/e/1FAIpQLSdfkgQU261P8_KezoMyQw_xBctCQfr5sp4S-TmPB26eBK99CQ/
 module.exports = app;
