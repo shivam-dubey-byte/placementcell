@@ -10,12 +10,12 @@ const {
 } = require("../controllers/requestController");
 
 // ActiveRequest Routes
-//router.post("/active-request", extractEmail, addActiveRequest); // Email from token
-//router.get("/active-request", getActiveRequest); // Email from body
-//router.delete("/active-request", deleteActiveRequest); // Email from body
+router.post("/active-request", extractEmail, addActiveRequest); // Email from token
+router.get("/active-request", getActiveRequest); // Email from body
+router.delete("/active-request", deleteActiveRequest); // Email from body
 
 // History Routes
-//router.post("/history", extractEmail, addHistory); // Email from token
-//router.get("/history", getHistory); // Email from body
+router.post("/history", extractEmail, addHistory); // Email from token
+router.get("/history", getHistory); // Email from body
 
 module.exports = router;
