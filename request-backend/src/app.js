@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   //res.json(items);
   res.send('Request Backend Working');
 });
-app.use("/api", routes);
+//app.use("/api", routes);
 
 connectDB();
 //https://docs.google.com/forms/d/e/1FAIpQLSdfkgQU261P8_KezoMyQw_xBctCQfr5sp4S-TmPB26eBK99CQ/
