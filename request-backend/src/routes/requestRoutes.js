@@ -16,6 +16,6 @@ const {
 
 // History Routes
 //router.post("/history", extractEmail, addHistory); // Email from token
-router.get("/history", getHistory); // Email from body
+//router.get("/history", getHistory); // Email from body
 
 module.exports = router;
