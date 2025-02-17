@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { extractEmail } = require("../middleware/authMiddleware");
-/*const {
+const {
     addActiveRequest,
     getActiveRequest,
     deleteActiveRequest,
     addHistory,
     getHistory
-} = require("../controllers/requestController");*/
+} = require("../controllers/requestController");
 
 // ActiveRequest Routes
 //router.post("/active-request", extractEmail, addActiveRequest); // Email from token
