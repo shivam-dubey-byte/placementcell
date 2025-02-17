@@ -10,8 +10,8 @@ const { extractEmail } = require("../middleware/authMiddleware");
 } = require("../controllers/requestController");*/
 
 // ActiveRequest Routes
-//router.post("/active-request", extractEmail, addActiveRequest); // Email from token
-//router.get("/active-request", getActiveRequest); // Email from body
+router.post("/active-request", extractEmail, addActiveRequest); // Email from token
+router.get("/active-request", getActiveRequest); // Email from body
 //router.delete("/active-request", deleteActiveRequest); // Email from body
 
 // History Routes
