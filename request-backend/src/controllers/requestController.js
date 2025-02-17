@@ -4,7 +4,7 @@ const {
     removeFromActiveRequest,
     addToHistory,
     fetchFromHistory
-} = require('../models/requestModel');
+} = require('../models/requestModel.js');
 
 // Add data to ActiveRequest (email from token)
 const addActiveRequest = async (req, res) => {
