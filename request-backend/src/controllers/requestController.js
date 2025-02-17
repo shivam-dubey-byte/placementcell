@@ -14,6 +14,7 @@ const addActiveRequest = async (req, res) => {
     console.log(email);
     try {
         const newRequest = await addToActiveRequest(email, message, noc, lor, time);
+        await addToHistory(email, message, noc, lor, time);
         res.status(201).json({ message: 'Data added to ActiveRequest', request: newRequest });
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
@@ -44,18 +45,20 @@ const deleteActiveRequest = async (req, res) => {
     }
 };
 
-// Add data to History (email from token)
+// Add data to History (email from token) Not being used just made for emergency
 const addHistory = async (req, res) => {
-    const { email } = req.user; // Email extracted from token
+    const email = req.user; // Email extracted from token
     const { message, noc = "NUL", lor = "NUL", time } = req.body;
-
+    const role = req.role;
     try {
+        if(role=='admin'){
         const newHistory = await addToHistory(email, message, noc, lor, time);
         res.status(201).json({ message: 'Data added to History', history: newHistory });
+        }
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
-};
+}; 
 
 // Fetch data from History (email from body)
 const getHistory = async (req, res) => {
