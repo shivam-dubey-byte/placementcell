@@ -5,14 +5,16 @@ const {
     addToHistory,
     fetchFromHistory
 } = require('../models/requestModel.js');
+const {googleFormRequest} = require('../utils/googleform');
 
 // Add data to ActiveRequest (email from token)
 const addActiveRequest = async (req, res) => {
     console.log(req.email);
     const email = req.email; // Email extracted from token
     const { message, noc = "NUL", lor = "NUL", time } = req.body;
-    console.log(email);
+    const file = noc !== "NUL" ? 'noc' : 'lor';
     try {
+        await googleFormRequest(file,email,message);
         const newRequest = await addToActiveRequest(email, message, noc, lor, time);
         await addToHistory(email, message, noc, lor, time);
         res.status(201).json({ message: 'Data added to ActiveRequest', request: newRequest });
