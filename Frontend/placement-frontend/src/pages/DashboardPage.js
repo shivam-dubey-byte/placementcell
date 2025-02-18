@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import Dashboard from "../components/Dashboard";
 
 export default function DashboardPage() {
-  const [userType, setUserType] = useState(null);
-  const navigate = useNavigate(); // ✅ Define navigate
+  const navigate = useNavigate();
+  const [userType, setUserType] = useState(() => {
+    // Directly get user role from localStorage on initial load
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.role || null;
+  });
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user || !user.role) {
-      navigate("/login"); // ✅ Redirect to login if user role is missing
-    } else {
-      setUserType(user.role);
+    if (!userType) {
+      navigate("/login");
     }
-  }, [navigate]); // ✅ Include navigate in dependency array
+  }, [userType, navigate]); // Now navigation happens immediately on page load
 
   if (!userType) return <h2>Loading...</h2>;
 

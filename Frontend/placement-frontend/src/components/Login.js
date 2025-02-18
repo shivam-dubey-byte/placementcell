@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "../App.css";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const navigate = useNavigate();
+
+  // Redirect logged-in users to the dashboard
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded?.role) {
+          navigate("/dashboard");
+        }
+      } catch (err) {
+        console.error("Invalid token, clearing storage.");
+        localStorage.clear();
+      }
+    }
+  }, [navigate]); // Run only on mount
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,13 +43,12 @@ export default function Login() {
         }
       );
 
-      // Read response as text first
       const textResponse = await response.text();
-      console.log("Raw API Response:", textResponse); // Debugging API response
+      console.log("Raw API Response:", textResponse);
 
       let data;
       try {
-        data = JSON.parse(textResponse); // Ensure valid JSON
+        data = JSON.parse(textResponse);
       } catch (err) {
         throw new Error("Invalid JSON format received from API.");
       }
@@ -47,7 +62,6 @@ export default function Login() {
         localStorage.setItem("token_expiry", Date.now() + 60 * 60 * 1000);
         console.log("Token stored:", localStorage.getItem("token"));
 
-        // Decode token safely
         try {
           const decoded = jwtDecode(data.token);
           console.log("Decoded Token:", decoded);
@@ -66,7 +80,11 @@ export default function Login() {
 
         setLoading(false);
         setSuccess(true);
-        setTimeout(() => navigate("/dashboard"), 1500);
+
+        // Force page reload to ensure correct state
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 1000);
       } else {
         setError(data.message || "Invalid credentials");
         setLoading(false);
