@@ -11,7 +11,7 @@ export default function Home() {
         .hero {
           height: 40vh;  /* 40% of viewport height */
           width: 100%;
-          background: url('${process.env.PUBLIC_URL}/background.jpg') no-repeat center center;
+          background: url('${process.env.PUBLIC_URL}/background.jpg') no-repeat center top;
           background-size: cover; /* Ensures the image fits without stretching */
           display: flex;
           align-items: center;
@@ -28,6 +28,20 @@ export default function Home() {
           font-weight: bold;
           text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
           position: absolute;
+        }
+
+        /* Media query for screens smaller than 768px (typical for phones) */
+        @media (max-width: 768px) {
+          .hero {
+            background-image: url('${process.env.PUBLIC_URL}/background-mobile.jpg');
+          }
+        }
+
+        /* Media query for screens larger than 768px (typical for laptops) */
+        @media (min-width: 769px) {
+          .hero {
+            background-image: url('${process.env.PUBLIC_URL}/background.jpg');
+          }
         }
         `}
       </style>
