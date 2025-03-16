@@ -72,7 +72,7 @@ export default function Login() {
               name: decoded.name,
               email: decoded.email,
               role: decoded.role,
-              profileImg:data.profile 
+              profileImg:data.profileImage
             })
           );
         } catch (decodeError) {

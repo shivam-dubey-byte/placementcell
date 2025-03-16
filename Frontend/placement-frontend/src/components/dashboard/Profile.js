@@ -80,7 +80,7 @@ const Profile = () => {
           <form onSubmit={handleSubmit} className="profile-form">
             <div className="profile-picture-upload">
               <label htmlFor="profilePicture">
-                <img src={user.profilePicture} alt="Profile" className="profile-picture" />
+                <img src={user.profileImg} alt="Profile" className="profile-picture" />
                 <span className="upload-text">Change Photo</span>
               </label>
               <input
