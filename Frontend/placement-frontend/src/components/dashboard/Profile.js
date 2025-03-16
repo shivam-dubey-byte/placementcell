@@ -4,7 +4,7 @@ import "../../styles/profile.css";
 
 const Profile = () => {
   const [user, setUser] = useState({
-    name: "John Doe",
+    name: localStorage.getItem("user.name"),
     email: "john.doe@example.com",
     phone: "123-456-7890",
     profilePicture: "https://via.placeholder.com/150",
@@ -172,7 +172,7 @@ const Profile = () => {
             </div>
           </form>
         ) : (
-          // Display Profile Information 
+          // Display Profile Information
           // 2tL4m1gjQ8qcBRre
           //TPCMUJ
           <div className="profile-info">
