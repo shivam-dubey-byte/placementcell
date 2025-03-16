@@ -45,7 +45,7 @@ const signup = async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
     const firstLetter = email.charAt(0).toLowerCase();
-    let profileImage = profileImageLinks[firstLetter] || "https://i.imgur.com/default.jpg";
+    const profileImage = profileImageLinks[firstLetter] || "https://i.imgur.com/default.jpg";
 
     // Create new user
     const userId = await createUser(name,email, password,role,profileImage);
@@ -76,9 +76,8 @@ const login = async (req, res) => {
     const token = jwt.sign({ userId: users._id, email: users.email,name: users.name,role: users.role }, 'mujtpc', {
       expiresIn: '1h',
     });//process.env.JWT_SECRET
-    // Assign default profile image if not present in DB
-    let profileImage = user.profileImage || profileImageLinks[email[0].toLowerCase()] || "https://i.imgur.com/default.jpg";
-    res.status(200).json({ message: 'Login successful', token,profileImage });
+
+    res.status(200).json({ message: 'Login successful', token });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
