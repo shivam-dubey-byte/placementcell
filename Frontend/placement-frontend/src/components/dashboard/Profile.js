@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "../../styles/profile.css";
 
 const Profile = () => {
   const [user, setUser] = useState({
-    name: localStorage.getItem("user.name"),
+    name: "",
     email: "john.doe@example.com",
     phone: "123-456-7890",
     profilePicture: "https://via.placeholder.com/150",
@@ -13,17 +12,30 @@ const Profile = () => {
     cgpa: "8.5",
     activeBacklog: false,
   });
+
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
   const [profilePictureFile, setProfilePictureFile] = useState(null);
 
+  // Load user data from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing localStorage user data:", error);
+      }
+    }
+  }, []);
+
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setUser({
-      ...user,
+    setUser((prevUser) => ({
+      ...prevUser,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
   // Handle profile picture change
@@ -33,18 +45,24 @@ const Profile = () => {
       setProfilePictureFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUser({ ...user, profilePicture: reader.result });
+        setUser((prevUser) => ({
+          ...prevUser,
+          profilePicture: reader.result,
+        }));
       };
       reader.readAsDataURL(file);
     }
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setMessage("Profile updated successfully!");
     setIsEditing(false);
     setProfilePictureFile(null);
+
+    // Save to localStorage
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
   return (
@@ -59,15 +77,10 @@ const Profile = () => {
           )}
         </div>
         {isEditing ? (
-          // Edit Form
           <form onSubmit={handleSubmit} className="profile-form">
             <div className="profile-picture-upload">
               <label htmlFor="profilePicture">
-                <img
-                  src={user.profilePicture}
-                  alt="Profile"
-                  className="profile-picture"
-                />
+                <img src={user.profilePicture} alt="Profile" className="profile-picture" />
                 <span className="upload-text">Change Photo</span>
               </label>
               <input
@@ -81,107 +94,41 @@ const Profile = () => {
             </div>
             <div className="form-group">
               <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={user.name}
-                onChange={handleInputChange}
-                required
-              />
+              <input type="text" id="name" name="name" value={user.name} onChange={handleInputChange} required />
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={user.email}
-                onChange={handleInputChange}
-                required
-              />
+              <input type="email" id="email" name="email" value={user.email} onChange={handleInputChange} required />
             </div>
             <div className="form-group">
               <label htmlFor="phone">Phone</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={user.phone}
-                onChange={handleInputChange}
-              />
+              <input type="tel" id="phone" name="phone" value={user.phone} onChange={handleInputChange} />
             </div>
             <div className="form-group">
               <label htmlFor="year">Year</label>
-              <input
-                type="number"
-                id="year"
-                name="year"
-                value={user.year}
-                onChange={handleInputChange}
-                min="1"
-                max="4"
-              />
+              <input type="number" id="year" name="year" value={user.year} onChange={handleInputChange} min="1" max="4" />
             </div>
             <div className="form-group">
               <label htmlFor="semester">Semester</label>
-              <input
-                type="number"
-                id="semester"
-                name="semester"
-                value={user.semester}
-                onChange={handleInputChange}
-                min="1"
-                max="8"
-              />
+              <input type="number" id="semester" name="semester" value={user.semester} onChange={handleInputChange} min="1" max="8" />
             </div>
             <div className="form-group">
               <label htmlFor="cgpa">CGPA</label>
-              <input
-                type="number"
-                id="cgpa"
-                name="cgpa"
-                value={user.cgpa}
-                onChange={handleInputChange}
-                step="0.01"
-                min="0"
-                max="10"
-              />
+              <input type="number" id="cgpa" name="cgpa" value={user.cgpa} onChange={handleInputChange} step="0.01" min="0" max="10" />
             </div>
             <div className="form-group checkbox-group">
-              <input
-                type="checkbox"
-                id="activeBacklog"
-                name="activeBacklog"
-                checked={user.activeBacklog}
-                onChange={handleInputChange}
-              />
+              <input type="checkbox" id="activeBacklog" name="activeBacklog" checked={user.activeBacklog} onChange={handleInputChange} />
               <label htmlFor="activeBacklog">Active Backlog</label>
             </div>
             <div className="form-actions">
-              <button type="submit" className="btn-save">
-                Save Changes
-              </button>
-              <button
-                type="button"
-                className="btn-cancel"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </button>
+              <button type="submit" className="btn-save">Save Changes</button>
+              <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>Cancel</button>
             </div>
           </form>
         ) : (
-          // Display Profile Information
-          // 2tL4m1gjQ8qcBRre
-          //TPCMUJ
           <div className="profile-info">
             <div className="profile-picture-container">
-              <img
-                src={user.profilePicture}
-                alt="Profile"
-                className="profile-picture"
-              />
+              <img src={user.profileImg} alt="Profile" className="profile-picture" />
             </div>
             <div className="info-group">
               <span className="info-label">Name:</span>
@@ -209,14 +156,9 @@ const Profile = () => {
             </div>
             <div className="info-group">
               <span className="info-label">Active Backlog:</span>
-              <span className="info-value">
-                {user.activeBacklog ? "Yes" : "No"}
-              </span>
+              <span className="info-value">{user.activeBacklog ? "Yes" : "No"}</span>
             </div>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="btn-edit"
-            >
+            <button onClick={() => setIsEditing(true)} className="btn-edit">
               Edit Profile
             </button>
           </div>

@@ -77,7 +77,10 @@ const login = async (req, res) => {
       expiresIn: '1h',
     });//process.env.JWT_SECRET
 
-    res.status(200).json({ message: 'Login successful', token });
+    // Assign default profile image if not present in DB
+    let profileImage = users.profile || profileImageLinks[email[0].toLowerCase()] || "https://i.imgur.com/default.jpg";
+
+    res.status(200).json({ message: 'Login successful', token,profileImage });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
