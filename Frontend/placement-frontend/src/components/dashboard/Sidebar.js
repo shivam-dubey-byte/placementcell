@@ -11,7 +11,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, userType, isMobile }) => {
     { name: "Approve LOR", path: "/dashboard/approve-lor", icon: "📝" },
     { name: "Send Emails", path: "/dashboard/send-emails", icon: "📧" },
     { name: "Manage Admins", path: "/dashboard/manage-admins", icon: "👨‍💼" },
-    { name: "File Manager", path: "/dashboard/file-manager", icon: "📁" },
+    //{ name: "File Manager", path: "/dashboard/file-manager", icon: "📁" },
   ];
 
   const studentLinks = [
@@ -20,7 +20,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, userType, isMobile }) => {
     { name: "Apply for LOR", path: "/dashboard/apply-lor", icon: "📝" },
     { name: "Upload Resume", path: "/dashboard/upload-resume", icon: "📤" },
     { name: "Profile", path: "/dashboard/profile", icon: "👤" },
-    { name: "Settings", path: "/dashboard/settings", icon: "⚙️" },
+   // { name: "Settings", path: "/dashboard/settings", icon: "⚙️" },
   ];
 
   const sidebarLinks = userType === "admin" ? adminLinks : studentLinks;

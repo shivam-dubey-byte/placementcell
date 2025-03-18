@@ -1,69 +1,110 @@
-import React, { useState } from "react";
+//https://resumemujtpc.shivamrajdubey.tech/api/active-request
+import React, { useState, useRef } from "react";
 import "../../styles/Form1.css";
-import axios from "axios"; // Import axios for making HTTP requests
 
 const ApplyForNOC = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    reason: "",
-    supportingDocuments: null,
+    message: "",
+    fileUrl: "",
+    noc: 1, // Ensure noc = 1 is always sent
   });
+
+  const [fileUploading, setFileUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const getToken = () => localStorage.getItem("token");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      supportingDocuments: e.target.files[0],
-    });
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setFileUploading(true);
+    
+    const uploadData = new FormData();
+    uploadData.append("resume", file);
+
+    try {// http://localhost:5002
+      const response = await fetch("https://requestsmuj.shivamrajdubey.tech/api/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: uploadData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setFormData((prevData) => ({
+          ...prevData,
+          fileUrl: result.fileUrl,
+        }));
+        alert("File uploaded successfully!");
+      } else {
+        alert(`File upload failed: ${result.message}`);
+      }
+    } catch (error) {
+      alert("Error uploading file. Please try again.");
+    } finally {
+      setFileUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Get the token from localStorage or wherever it is stored
-    const token = localStorage.getItem("token"); // Replace with your actual token retrieval logic
-
-    if (!token) {
-      alert("No token found. Please log in.");
+    if (!formData.fileUrl) {
+      alert("Please upload a supporting document first.");
       return;
     }
 
-    // Prepare the data to send in the request body
-    const requestData = {
-      message: formData.reason, // Use the reason as the message
-      noc: "1", // Set noc to "1" as required
-    };
+    setSubmitting(true);
 
-    try {
-      // Send the POST request
-      const response = await axios.post(
-        "https://resumemujtpc.shivamrajdubey.tech/api/active-request",
-        requestData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        }
-      );
+    try {// http://localhost:5002
+      const response = await fetch("https://requestsmuj.shivamrajdubey.tech/api/active-request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify(formData),
+      });
 
-      // Handle the response
-      if (response.status === 201) {
+      const result = await response.json();
+
+      if (response.ok) {
         alert("NOC application submitted successfully!");
-        console.log("Response:", response.data);
+        console.log("NOC Application Data:", result);
+
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+          fileUrl: "",
+          noc: 1, // Ensure it remains 1
+        });
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
-        alert("Failed to submit NOC application.");
+        alert(`Submission failed: ${result.message}`);
       }
     } catch (error) {
-      console.error("Error submitting NOC application:", error);
-      alert("An error occurred while submitting the NOC application.");
+      alert("Error submitting form. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -80,6 +121,7 @@ const ApplyForNOC = () => {
             value={formData.name}
             onChange={handleChange}
             required
+            disabled={submitting}
           />
         </div>
         <div className="form-group">
@@ -91,16 +133,18 @@ const ApplyForNOC = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            disabled={submitting}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="reason">Reason for NOC:</label>
+          <label htmlFor="message">Reason for NOC:</label>
           <textarea
-            id="reason"
-            name="reason"
-            value={formData.reason}
+            id="message"
+            name="message"
+            value={formData.message}
             onChange={handleChange}
             required
+            disabled={submitting}
           />
         </div>
         <div className="form-group">
@@ -109,12 +153,20 @@ const ApplyForNOC = () => {
             type="file"
             id="supportingDocuments"
             name="supportingDocuments"
+            ref={fileInputRef}
             onChange={handleFileChange}
             required
+            disabled={fileUploading || submitting}
           />
+          {fileUploading && <p>Uploading file...</p>}
+          {formData.fileUrl && (
+            <p>
+              File uploaded: <a href={formData.fileUrl} target="_blank" rel="noopener noreferrer">View File</a>
+            </p>
+          )}
         </div>
-        <button type="submit" className="submit-button">
-          Submit
+        <button type="submit" className="submit-button" disabled={fileUploading || submitting}>
+          {submitting ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

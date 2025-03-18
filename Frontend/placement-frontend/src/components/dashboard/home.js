@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = ({ userType }) => {
+  const navigate = useNavigate();
   return (
     <>
       {/* Main Content */}
@@ -30,9 +32,9 @@ const Home = ({ userType }) => {
 
             <h3>Quick Actions</h3>
             <div className="quick-actions">
-              <button className="action-button">Approve Pending Requests</button>
-              <button className="action-button">Send Reminder Emails</button>
-              <button className="action-button">Generate Reports</button>
+              <button className="action-button"onClick={() => navigate("/dashboard/manage-admins")}>Manage Admins</button>
+              <button className="action-button"onClick={() => navigate("/dashboard/send-emails")}>Send Reminder Emails</button>
+              <button className="action-button"onClick={() => navigate("/dashboard/apply-lor")}>Generate Reports</button>
             </div>
           </div>
         )}
@@ -63,9 +65,9 @@ const Home = ({ userType }) => {
 
             <h3>Quick Actions</h3>
             <div className="quick-actions">
-              <button className="action-button">Apply for NOC</button>
-              <button className="action-button">Apply for LOR</button>
-              <button className="action-button">Upload Resume</button>
+              <button className="action-button" onClick={() => navigate("/dashboard/apply-noc")}>Apply for NOC</button>
+              <button className="action-button" onClick={() => navigate("/dashboard/apply-lor")}>Apply for LOR</button>
+              <button className="action-button" onClick={() => navigate("/dashboard/upload-resume")}>Upload Resume</button>
             </div>
           </div>
         )}
