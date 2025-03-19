@@ -1,0 +1,158 @@
+/* General Container */
+.send-emails-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+    backdrop-filter: blur(15px);  /* Background blur */
+    z-index: 1;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    text-align: center;
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  
+  .radio-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  
+  .radio-option {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .radio-option input {
+    margin-right: 10px;
+  }
+  
+  /* Form Section */
+  .upload-section, .input-section {
+    margin-bottom: 20px;
+  }
+  
+  .input-label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .upload-input,
+  .input-field,
+  .textarea-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    color: #333;
+    outline: none;
+    transition: 0.3s;
+  }
+  
+  .upload-input:focus,
+  .input-field:focus,
+  .textarea-field:focus {
+    border-color: #4CAF50;
+  }
+  
+  .textarea-field {
+    height: 150px;
+    resize: none;
+  }
+  
+  /* Send Button */
+  .send-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .send-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  .send-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Loading Spinner */
+  .loading {
+    background-color: #ccc;
+    position: relative;
+  }
+  
+  .loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4CAF50;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+  }
+  
+  /* Feedback */
+  .feedback {
+    text-align: center;
+    margin-top: 20px;
+    color: #e74c3c;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .feedback.success {
+    color: #2ecc71;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .send-emails-container {
+      padding: 20px;
+    }
+  
+    h2 {
+      font-size: 1.8rem;
+    }
+  
+    .input-field,
+    .textarea-field {
+      font-size: 1rem;
+    }
+  
+    .send-btn {
+      font-size: 1.2rem;
+    }
+  }
+  
+  /* Keyframes for Loading Spinner */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
