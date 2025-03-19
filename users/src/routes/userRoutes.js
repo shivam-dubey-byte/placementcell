@@ -4,7 +4,7 @@ const { fetchStudents,
     searchUser, 
     fetchAdmins,
     editUser,
-    removeUser  } = require('../controllers/userController');
+    removeUser,searchAdmin  } = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -16,6 +16,8 @@ router.post('/admins', fetchAdmins);
 
 // Route to search users by name or email
 router.post('/search', searchUser);
+// Route to search users by name or email
+router.post('/searchAdmin', searchAdmin);
 
 
 

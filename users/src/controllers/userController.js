@@ -3,7 +3,8 @@ const { getStudents,
   getAdmins,
    findUserByNameOrEmail,
    updateUser, 
-   deleteUser  } = require('../models/userModel');
+   deleteUser,
+   findAdminByNameOrEmail  } = require('../models/userModel');
 
 // Get all students
 const fetchStudents = async (req, res) => {
@@ -39,6 +40,28 @@ const searchUser = async (req, res) => {
   }
 };
 
+// Find user by name or email (using request body)
+const searchAdmin = async (req, res) => {
+  try {
+    const { query } = req.body;
+    const page = req.body.page ?? 1;
+
+    if (!query) {
+      return res.status(400).json({ error: "Query parameter is required in the request body" });
+    }
+
+    const users = await findAdminByNameOrEmail(query,page);
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error("Error in searchUser:", error); // Debugging
+    res.status(500).json({ error: 'Server error', details: error.message });
+  }
+};
 
 // Get all students
 const fetchAdmins = async (req, res) => {
@@ -95,4 +118,4 @@ const removeUser = async (req, res) => {
 };
 
 
-module.exports = { fetchStudents, searchUser, fetchAdmins,removeUser,editUser  };
+module.exports = { fetchStudents, searchUser, fetchAdmins,removeUser,editUser,searchAdmin  };

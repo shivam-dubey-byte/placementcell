@@ -58,6 +58,34 @@ const findUserByNameOrEmail = async (query,page) => {
   }
 };
 
+// Find a user by name or email (case-insensitive)
+const findAdminByNameOrEmail = async (query,page) => {
+  try {
+    const db = await connectDB("user");
+    const collection = db.collection('users');
+
+    const users = await collection.find({
+      $and: [
+        { role: "admin" }, // Ensure the user has the role "student"
+        {
+          $or: [
+            { name: { $regex: query, $options: 'i' } },
+            { email: { $regex: query, $options: 'i' } }
+          ]
+        }
+      ]
+    }).project({ password: 0, __v: 0 })
+    .project({ password: 0, __v: 0 })  // Exclude sensitive fields
+    .skip((page - 1) * 10)  // Skip users for pagination
+    .limit(10)  // Get only 10 students per page
+    .toArray();
+
+    return users;
+  } catch (error) {
+    console.error("Database error:", error);
+    return [];
+  }
+};
 
 // Update User
 const updateUser = async (userId, updates) => {
@@ -94,4 +122,4 @@ const deleteUser = async (userId) => {
 };
 
 
-module.exports = { getStudents, findUserByNameOrEmail, getAdmins, deleteUser, updateUser };
+module.exports = { getStudents, findUserByNameOrEmail, getAdmins, deleteUser, updateUser,findAdminByNameOrEmail };
