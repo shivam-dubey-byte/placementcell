@@ -9,7 +9,9 @@ const ManageStudent = () => {
   const [page, setPage] = useState(1);
   const [editingStudent, setEditingStudent] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [deletingStudents, setDeletingStudents] = useState({}); // Track deleting status for each student
+  const [updatedName, setUpdatedName] = useState(""); // State for the updated name
+  const [updatedEmail, setUpdatedEmail] = useState(""); // State for the updated email
 
   // Fetch students from API
   const fetchStudents = async (pageNum = 1) => {
@@ -45,11 +47,22 @@ const ManageStudent = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Simulating API call (Replace with actual API request)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const updates = {
+        name: updatedName, // Send the updated name
+        email: updatedEmail, // Send the updated email
+      };
 
-      alert("Changes saved successfully!"); // Replace with actual API response handling
-      setEditingStudent(null);
+      // Send the data in the required format
+      await axios.post("https://mujrequest.shivamrajdubey.tech/auth/edit", {
+        userId: editingStudent, // Send student ID to edit
+        updates // Send updated details (name and email)
+      });
+
+      alert("Changes saved successfully!"); // Handle success response
+      setEditingStudent(null); // Exit edit mode
+      setUpdatedName(""); // Clear updated name
+      setUpdatedEmail(""); // Clear updated email
+      fetchStudents(page); // Re-fetch students to get updated list
     } catch (error) {
       console.error("Error saving changes:", error);
     } finally {
@@ -62,17 +75,26 @@ const ManageStudent = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this student?");
     if (!confirmDelete) return;
 
-    setDeleting(true);
-    try {
-      // Simulating API call (Replace with actual API request)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    setDeletingStudents((prevState) => ({
+      ...prevState,
+      [id]: true, // Set this student's deletion state to true while deleting
+    }));
 
-      setStudents(students.filter((student) => student._id !== id));
+    try {
+      // Send POST request to the delete endpoint
+      await axios.post("https://mujrequest.shivamrajdubey.tech/auth/delete", {
+        userId: id // Send student ID to delete
+      });
+
+      setStudents(students.filter((student) => student._id !== id)); // Update the students list locally
       alert("Student deleted successfully!");
     } catch (error) {
       console.error("Error deleting student:", error);
     } finally {
-      setDeleting(false);
+      setDeletingStudents((prevState) => ({
+        ...prevState,
+        [id]: false, // Reset the deletion state for this student after deletion
+      }));
     }
   };
 
@@ -121,12 +143,26 @@ const ManageStudent = () => {
                     <td>{index + 1}</td>
                     <td>
                       {editingStudent === student._id ? (
-                        <input type="text" defaultValue={student.name} />
+                        <input 
+                          type="text" 
+                          value={updatedName} // Bind the value to updatedName
+                          onChange={(e) => setUpdatedName(e.target.value)} // Update name when input changes
+                        />
                       ) : (
                         student.name
                       )}
                     </td>
-                    <td>{student.email}</td>
+                    <td>
+                      {editingStudent === student._id ? (
+                        <input 
+                          type="text" 
+                          value={updatedEmail} // Bind the value to updatedEmail
+                          onChange={(e) => setUpdatedEmail(e.target.value)} // Update email when input changes
+                        />
+                      ) : (
+                        student.email
+                      )}
+                    </td>
                     <td>
                       <a href={student.resume} target="_blank" rel="noopener noreferrer" className="resume-link">
                         View Resume
@@ -142,9 +178,17 @@ const ManageStudent = () => {
                         </>
                       ) : (
                         <>
-                          <button className="edit-btn" onClick={() => setEditingStudent(student._id)}>Edit</button>
-                          <button className="delete-btn" onClick={() => handleDelete(student._id)} disabled={deleting}>
-                            {deleting ? <span className="loading-spinner"></span> : "Delete"}
+                          <button className="edit-btn" onClick={() => { 
+                            setEditingStudent(student._id); 
+                            setUpdatedName(student.name); 
+                            setUpdatedEmail(student.email);
+                          }}>Edit</button>
+                          <button 
+                            className="delete-btn" 
+                            onClick={() => handleDelete(student._id)} 
+                            disabled={deletingStudents[student._id]} // Disable only the button for this student
+                          >
+                            {deletingStudents[student._id] ? <span className="loading-spinner"></span> : "Delete"}
                           </button>
                         </>
                       )}

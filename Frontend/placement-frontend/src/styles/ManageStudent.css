@@ -54,6 +54,8 @@
 .student-table {
   width: 100%;
   border-collapse: collapse;
+  /*overflow-x: auto ;
+  display: block;*/
 }
 
 .student-table th, .student-table td {
@@ -147,12 +149,9 @@
   font-weight: bold;
 }
 
-
-/*---------------*/
-
 /* Save Button */
 .save-btn {
-  background-color: #28a745; /* Green */
+  background-color: #28a745;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -164,13 +163,13 @@
 }
 
 .save-btn:hover {
-  background-color: #218838; /* Darker Green */
+  background-color: #218838;
   box-shadow: 0px 4px 8px rgba(0, 128, 0, 0.2);
 }
 
 /* Cancel Button */
 .cancel-btn {
-  background-color: #dc3545; /* Red */
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -183,56 +182,8 @@
 }
 
 .cancel-btn:hover {
-  background-color: #c82333; /* Darker Red */
+  background-color: #c82333;
   box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.2);
-}
-/*-----------------*/
-
-/* Buttons */
-.save-btn, .cancel-btn, .edit-btn, .delete-btn {
-  padding: 8px 14px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-}
-
-.save-btn {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.save-btn:hover {
-  background-color: #45a049;
-}
-
-.cancel-btn {
-  background-color: #f44336;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background-color: #d32f2f;
-}
-
-.edit-btn {
-  background-color: #2196F3;
-  color: white;
-}
-
-.edit-btn:hover {
-  background-color: #1976D2;
-}
-
-.delete-btn {
-  background-color: #FF5733;
-  color: white;
-}
-
-.delete-btn:hover {
-  background-color: #E53935;
 }
 
 /* Loading Spinner */
@@ -250,4 +201,38 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .manage-student-container {
+    width: 90%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  .manage-student-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-container {
+    width: 100%;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+
+  .student-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
