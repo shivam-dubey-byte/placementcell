@@ -3,66 +3,102 @@ import './ApproveNOC.css';
 
 const ApproveNOC = () => {
   const [nocRequests, setNocRequests] = useState([]);
-  const [isApproving, setIsApproving] = useState(false);
+  const [processingId, setProcessingId] = useState(null);
+  const [processingType, setProcessingType] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  // Sample NOC Data
+  // Fetch NOC Requests from API
   useEffect(() => {
-    // Simulate fetching data from backend (can be replaced with real API call)
-    const sampleRequests = [
-      {
-        id: 1,
-        studentName: 'Shivam Dubey',
-        studentEmail: 'shivam.dubey@example.com',
-        reason: 'Requesting NOC for higher studies at a foreign university.',
-        docLink: 'http://example.com/noc-docs/shivam-dubey-noc.pdf',
-        status: 'Pending'
-      },
-      {
-        id: 2,
-        studentName: 'Karan Sharma',
-        studentEmail: 'karan.sharma@example.com',
-        reason: 'Requesting NOC for attending a national conference on AI.',
-        docLink: 'http://example.com/noc-docs/karan-sharma-noc.pdf',
-        status: 'Pending'
-      }
-    ];
+    const fetchNOCRequests = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5003/api/active-request', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
-    setNocRequests(sampleRequests);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Failed to fetch requests');
+        }
+
+        const { data } = await response.json();
+
+        const formattedData = data.map((item) => ({
+          id: item._id,
+          studentName: item.name,
+          studentEmail: item.email,
+          reason: item.message,
+          docLink: item.fileUrl,
+          dateTime: item.dateTime,
+          status: 'Pending',
+        }));
+
+        setNocRequests(formattedData);
+      } catch (error) {
+        console.error('Fetch Error:', error);
+        setFeedbackMessage(error.message || 'Failed to load NOC requests');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNOCRequests();
   }, []);
 
-  // Handle approval
-  const handleApprove = (id) => {
-    setIsApproving(true);
+  const handleAction = async (requestId, actionValue, studentEmail, dateTime) => {
+    setProcessingId(requestId);
+    setProcessingType(actionValue === 1 ? 'approve' : 'reject');
     setFeedbackMessage('');
 
-    // Simulate approval process
-    setTimeout(() => {
-      setNocRequests((prevState) =>
-        prevState.map((request) =>
-          request.id === id ? { ...request, status: 'Approved' } : request
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5003/api/action', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: actionValue,
+          email: studentEmail,
+          dateTime: dateTime,
+          requestId: requestId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Action failed');
+      }
+
+      setNocRequests((prev) =>
+        prev.map((request) =>
+          request.id === requestId
+            ? { ...request, status: actionValue === 1 ? 'Approved' : 'Rejected' }
+            : request
         )
       );
-      setFeedbackMessage('NOC Request Approved!');
-      setIsApproving(false);
-    }, 1000);
+
+      setFeedbackMessage(`NOC Request ${actionValue === 1 ? 'Approved' : 'Rejected'}!`);
+    } catch (error) {
+      console.error('Action Error:', error);
+      setFeedbackMessage(error.message);
+    } finally {
+      setProcessingId(null);
+      setProcessingType(null);
+    }
   };
 
-  // Handle rejection
-  const handleReject = (id) => {
-    setIsApproving(true);
-    setFeedbackMessage('');
+  const handleApprove = (id, email, dateTime) => {
+    handleAction(id, 1, email, dateTime);
+  };
 
-    // Simulate rejection process
-    setTimeout(() => {
-      setNocRequests((prevState) =>
-        prevState.map((request) =>
-          request.id === id ? { ...request, status: 'Rejected' } : request
-        )
-      );
-      setFeedbackMessage('NOC Request Rejected!');
-      setIsApproving(false);
-    }, 1000);
+  const handleReject = (id, email, dateTime) => {
+    handleAction(id, 0, email, dateTime);
   };
 
   return (
@@ -71,8 +107,9 @@ const ApproveNOC = () => {
 
       {feedbackMessage && <p className="feedback-message">{feedbackMessage}</p>}
 
-      {/* Display NOC Requests */}
-      {nocRequests.length === 0 ? (
+      {loading ? (
+        <p className="loading-text">Loading NOC requests...</p>
+      ) : nocRequests.length === 0 ? (
         <p className="loading-text">No NOC requests available.</p>
       ) : (
         nocRequests.map((noc) => (
@@ -105,9 +142,7 @@ const ApproveNOC = () => {
               <div className="detail-item">
                 <label>Status:</label>
                 <div className="status-container">
-                  <p className={`status ${noc.status.toLowerCase()}`}>
-                    {noc.status}
-                  </p>
+                  <p className={`status ${noc.status.toLowerCase()}`}>{noc.status}</p>
                 </div>
               </div>
             </div>
@@ -115,18 +150,18 @@ const ApproveNOC = () => {
             {noc.status === 'Pending' && (
               <div className="action-buttons">
                 <button
-                  onClick={() => handleApprove(noc.id)}
+                  onClick={() => handleApprove(noc.id, noc.studentEmail, noc.dateTime)}
                   className="approve-btn"
-                  disabled={isApproving}
+                  disabled={processingId === noc.id}
                 >
-                  {isApproving ? 'Approving...' : 'Approve'}
+                  {processingId === noc.id && processingType === 'approve' ? 'Approving...' : 'Approve'}
                 </button>
                 <button
-                  onClick={() => handleReject(noc.id)}
+                  onClick={() => handleReject(noc.id, noc.studentEmail, noc.dateTime)}
                   className="reject-btn"
-                  disabled={isApproving}
+                  disabled={processingId === noc.id}
                 >
-                  {isApproving ? 'Rejecting...' : 'Reject'}
+                  {processingId === noc.id && processingType === 'reject' ? 'Rejecting...' : 'Reject'}
                 </button>
               </div>
             )}

@@ -34,8 +34,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://mujtpcbackend.shivamrajdubey.tech/auth/login",
+      const response = await fetch(//https://mujtpcbackend.shivamrajdubey.tech
+        "http://localhost:5000/auth/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

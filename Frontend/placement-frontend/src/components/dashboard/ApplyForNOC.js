@@ -34,8 +34,8 @@ const ApplyForNOC = () => {
     const uploadData = new FormData();
     uploadData.append("resume", file);
 
-    try {// http://localhost:5002
-      const response = await fetch("https://requestsmuj.shivamrajdubey.tech/api/upload", {
+    try {//  https://requestsmuj.shivamrajdubey.tech
+      const response = await fetch("http://localhost:5003/api/upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -71,8 +71,8 @@ const ApplyForNOC = () => {
 
     setSubmitting(true);
 
-    try {// http://localhost:5002
-      const response = await fetch("https://requestsmuj.shivamrajdubey.tech/api/active-request", {
+    try {//  https://requestsmuj.shivamrajdubey.tech
+      const response = await fetch("http://localhost:5003/api/active-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

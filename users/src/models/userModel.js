@@ -5,6 +5,68 @@ const connectDB = require('../connectDB');
 // Get all students
 const getStudents = async (page) => {
   const db = await connectDB("user");
+  const usersCollection = db.collection("users");
+  const resumesCollection = db.collection("resume");
+
+  // Fetch students with pagination
+  const students = await usersCollection
+    .find({ role: "student" })
+    .project({ password: 0, __v: 0 }) // Exclude sensitive fields
+    .skip((page - 1) * 10) // Pagination
+    .limit(10)
+    .toArray();
+
+  // Extract emails of students
+  const emails = students.map(student => student.email);
+
+  // Fetch resumes by email
+  const resumes = await resumesCollection
+    .find({ email: { $in: emails } })
+    .toArray();
+
+  // Attach resume URLs to students
+  const studentsWithResumes = students.map(student => ({
+    ...student,
+    resume: resumes.find(resume => resume.email === student.email)?.resume || null
+  }));
+
+  return studentsWithResumes;
+};
+
+/*
+const getStudents = async (page) => {
+  const db = await connectDB("user");
+  const usersCollection = db.collection("users");
+  const resumesCollection = db.collection("resume");
+
+  // Fetch students with pagination
+  const students = await usersCollection
+    .find({ role: "student" })
+    .project({ password: 0, __v: 0 }) // Exclude sensitive fields
+    .skip((page - 1) * 10) // Pagination
+    .limit(10)
+    .toArray();
+
+  // Extract emails of students
+  const emails = students.map(student => student.email);
+
+  // Fetch resumes by email
+  const resumes = await resumesCollection
+    .find({ email: { $in: emails } })
+    .toArray();
+
+  // Attach resumes to corresponding students
+  const studentsWithResumes = students.map(student => ({
+    ...student,
+    resume: resumes.find(resume => resume.email === student.email) || null
+  }));
+
+  return studentsWithResumes;
+};
+*/
+/*
+const getStudents = async (page) => {
+  const db = await connectDB("user");
   const collection = db.collection('users');
   
   const students = await collection.find({ role: "student" })
@@ -14,7 +76,7 @@ const getStudents = async (page) => {
   .toArray();
 
   return students;
-};
+}; */
 
 const getAdmins = async (page) => {
   const db = await connectDB("user");
@@ -122,4 +184,10 @@ const deleteUser = async (userId) => {
 };
 
 
-module.exports = { getStudents, findUserByNameOrEmail, getAdmins, deleteUser, updateUser,findAdminByNameOrEmail };
+module.exports = {
+   getStudents,
+   findUserByNameOrEmail, 
+   getAdmins, 
+   deleteUser, 
+   updateUser,
+   findAdminByNameOrEmail };

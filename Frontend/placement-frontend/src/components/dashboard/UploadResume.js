@@ -11,8 +11,8 @@ const ResumeUpload = () => {
   useEffect(() => {
     // Fetch existing resume from the backend
     const fetchResume = async () => {
-      try {
-        const response = await fetch("https://requestsmuj.shivamrajdubey.tech/api/resume", {
+      try {//  https://requestsmuj.shivamrajdubey.tech
+        const response = await fetch("http://localhost:5001/api/resume", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is stored
@@ -49,8 +49,8 @@ const ResumeUpload = () => {
     const formData = new FormData();
     formData.append("resume", file);
 
-    try {
-      const response = await fetch("https://requestsmuj.shivamrajdubey.tech/resume-upload", {
+    try {// https://requestsmuj.shivamrajdubey.tech
+      const response = await fetch("http://localhost:5001/api/resume-upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

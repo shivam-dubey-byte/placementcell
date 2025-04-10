@@ -3,66 +3,102 @@ import './ApproveLOR.css';
 
 const ApproveLOR = () => {
   const [lorRequests, setLorRequests] = useState([]);
-  const [isApproving, setIsApproving] = useState(false);
+  const [processingId, setProcessingId] = useState(null); // Tracks the ID being processed
+  const [processingType, setProcessingType] = useState(null); // 'approve' or 'reject'
   const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  // Sample LOR Data
+  // Fetch LOR Requests from API
   useEffect(() => {
-    // Simulate fetching data from backend (can be replaced with real API call)
-    const sampleRequests = [
-      {
-        id: 1,
-        studentName: 'Krishna Yadav',
-        studentEmail: 'krishna.yadav@example.com',
-        reason: 'Requesting LOR for applying to an international university.',
-        docLink: 'http://example.com/lor-docs/krishna-yadav-lor.pdf',
-        status: 'Pending'
-      },
-      {
-        id: 2,
-        studentName: 'Siddharth Reddy',
-        studentEmail: 'siddharth.reddy@example.com',
-        reason: 'Requesting LOR for internship application.',
-        docLink: 'http://example.com/lor-docs/siddharth-reddy-lor.pdf',
-        status: 'Pending'
-      }
-    ];
+    const fetchLORRequests = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5002/api/active-request', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-    setLorRequests(sampleRequests);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Failed to fetch requests');
+        }
+
+        const { data } = await response.json();
+
+        const formattedData = data.map(item => ({
+          id: item._id,
+          studentName: item.name,
+          studentEmail: item.email,
+          reason: item.message,
+          docLink: item.fileUrl,
+          dateTime: item.dateTime,
+          status: 'Pending'
+        }));
+
+        setLorRequests(formattedData);
+      } catch (error) {
+        console.error('Fetch Error:', error);
+        setFeedbackMessage(error.message || 'Failed to load LOR requests');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLORRequests();
   }, []);
 
-  // Handle approval
-  const handleApprove = (id) => {
-    setIsApproving(true);
+  const handleAction = async (requestId, actionValue, studentEmail, dateTime) => {
+    setProcessingId(requestId);
+    setProcessingType(actionValue === 1 ? 'approve' : 'reject');
     setFeedbackMessage('');
 
-    // Simulate approval process
-    setTimeout(() => {
-      setLorRequests((prevState) =>
-        prevState.map((request) =>
-          request.id === id ? { ...request, status: 'Approved' } : request
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5002/api/action', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: actionValue,
+          email: studentEmail,
+          dateTime: dateTime,
+          requestId: requestId
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Action failed');
+      }
+
+      setLorRequests(prev =>
+        prev.map(request =>
+          request.id === requestId
+            ? { ...request, status: actionValue === 1 ? 'Approved' : 'Rejected' }
+            : request
         )
       );
-      setFeedbackMessage('LOR Request Approved!');
-      setIsApproving(false);
-    }, 1000);
+
+      setFeedbackMessage(`LOR Request ${actionValue === 1 ? 'Approved' : 'Rejected'}!`);
+    } catch (error) {
+      console.error('Action Error:', error);
+      setFeedbackMessage(error.message);
+    } finally {
+      setProcessingId(null);
+      setProcessingType(null);
+    }
   };
 
-  // Handle rejection
-  const handleReject = (id) => {
-    setIsApproving(true);
-    setFeedbackMessage('');
+  const handleApprove = (id, email, dateTime) => {
+    handleAction(id, 1, email, dateTime);
+  };
 
-    // Simulate rejection process
-    setTimeout(() => {
-      setLorRequests((prevState) =>
-        prevState.map((request) =>
-          request.id === id ? { ...request, status: 'Rejected' } : request
-        )
-      );
-      setFeedbackMessage('LOR Request Rejected!');
-      setIsApproving(false);
-    }, 1000);
+  const handleReject = (id, email, dateTime) => {
+    handleAction(id, 0, email, dateTime);
   };
 
   return (
@@ -71,8 +107,9 @@ const ApproveLOR = () => {
 
       {feedbackMessage && <p className="feedback-message">{feedbackMessage}</p>}
 
-      {/* Display LOR Requests */}
-      {lorRequests.length === 0 ? (
+      {loading ? (
+        <p className="loading-text">Loading LOR requests...</p>
+      ) : lorRequests.length === 0 ? (
         <p className="loading-text">No LOR requests available.</p>
       ) : (
         lorRequests.map((lor) => (
@@ -115,18 +152,18 @@ const ApproveLOR = () => {
             {lor.status === 'Pending' && (
               <div className="action-buttons">
                 <button
-                  onClick={() => handleApprove(lor.id)}
+                  onClick={() => handleApprove(lor.id, lor.studentEmail, lor.dateTime)}
                   className="approve-btn"
-                  disabled={isApproving}
+                  disabled={processingId === lor.id}
                 >
-                  {isApproving ? 'Approving...' : 'Approve'}
+                  {processingId === lor.id && processingType === 'approve' ? 'Approving...' : 'Approve'}
                 </button>
                 <button
-                  onClick={() => handleReject(lor.id)}
+                  onClick={() => handleReject(lor.id, lor.studentEmail, lor.dateTime)}
                   className="reject-btn"
-                  disabled={isApproving}
+                  disabled={processingId === lor.id}
                 >
-                  {isApproving ? 'Rejecting...' : 'Reject'}
+                  {processingId === lor.id && processingType === 'reject' ? 'Rejecting...' : 'Reject'}
                 </button>
               </div>
             )}

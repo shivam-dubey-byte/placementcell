@@ -16,8 +16,8 @@ const ManageStudent = () => {
   // Fetch students from API
   const fetchStudents = async (pageNum = 1) => {
     try {
-      setLoading(true);
-      const response = await axios.post("https://mujrequest.shivamrajdubey.tech/auth/students", { page: pageNum });
+      setLoading(true);// https://mujrequest.shivamrajdubey.tech
+      const response = await axios.post("http://localhost:5004/auth/students", { page: pageNum });
       setStudents(response.data.students);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -34,7 +34,7 @@ const ManageStudent = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.post("https://mujrequest.shivamrajdubey.tech/auth/search", { query: search });
+      const response = await axios.post("http://localhost:5004/auth/search", { query: search });
       setStudents(response.data.users);
     } catch (error) {
       console.error("Error searching students:", error);
@@ -53,7 +53,7 @@ const ManageStudent = () => {
       };
 
       // Send the data in the required format
-      await axios.post("https://mujrequest.shivamrajdubey.tech/auth/edit", {
+      await axios.post("http://localhost:5004/auth/edit", {
         userId: editingStudent, // Send student ID to edit
         updates // Send updated details (name and email)
       });
@@ -82,7 +82,7 @@ const ManageStudent = () => {
 
     try {
       // Send POST request to the delete endpoint
-      await axios.post("https://mujrequest.shivamrajdubey.tech/auth/delete", {
+      await axios.post("http://localhost:5004/auth/delete", {
         userId: id // Send student ID to delete
       });
 
