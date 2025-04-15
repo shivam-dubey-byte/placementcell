@@ -1,0 +1,46 @@
+.toast {
+    position: fixed;
+    top: 25px;
+    right: 30px;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    z-index: 9999;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    animation: fadeInOut 3s ease-in-out;
+    background: linear-gradient(135deg, #667eea, #764ba2); /* 🎨 premium gradient */
+  }
+  
+  .toast.success {
+    background: linear-gradient(135deg, #43cea2, #185a9d); /* green-blue gradient */
+  }
+  
+  .toast.error {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b); /* red-orange gradient */
+  }
+  
+  .toast.warning {
+    background: linear-gradient(135deg, #f7971e, #ffd200); /* yellow-gold gradient */
+  }
+  
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    10% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    90% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+  

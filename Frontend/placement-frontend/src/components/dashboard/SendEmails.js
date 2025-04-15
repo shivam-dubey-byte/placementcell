@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./SendEmails.css"; // Link your CSS file here
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
+import "./SendEmails.css";
 
 const SendEmails = () => {
   const [csvFile, setCsvFile] = useState(null);
@@ -20,16 +22,11 @@ const SendEmails = () => {
     }
   };
 
-  const handleSubjectChange = (e) => setSubject(e.target.value);
-  const handleMessageChange = (e) => setMessage(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-
   const parseCSV = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
-        const text = reader.result;
-        const lines = text.split("\n");
+        const lines = reader.result.split("\n");
         const emails = lines.map((line) => line.trim()).filter(Boolean);
         resolve(emails);
       };
@@ -39,8 +36,8 @@ const SendEmails = () => {
   };
 
   const handleSendEmails = async () => {
-    if ((!csvFile && isMassMailing) || !subject || !message || (isMassMailing && !csvFile && !email)) {
-      setFeedback("Please complete all fields and upload a CSV file or provide an email address.");
+    if ((!csvFile && isMassMailing) || !subject || !message || (!isMassMailing && !email)) {
+      setFeedback("Please complete all fields and provide the required file or email address.");
       return;
     }
 
@@ -48,6 +45,8 @@ const SendEmails = () => {
     setFeedback("");
 
     try {
+      const token = localStorage.getItem("token");
+
       if (isMassMailing) {
         const emails = await parseCSV(csvFile);
         if (emails.length === 0) {
@@ -56,29 +55,21 @@ const SendEmails = () => {
           return;
         }
 
-        const response = await axios.post("https://your-backend-api.com/sendEmails", {
-          emails,
-          subject,
-          message,
-        });
+        const response = await axios.post(
+          "http://localhost:5004/api/sendEmails",
+          { emails, subject, message },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-        if (response.data.success) {
-          setFeedback("Emails sent successfully!");
-        } else {
-          setFeedback("Error sending the emails.");
-        }
+        setFeedback(response.data.success ? "Emails sent successfully!" : "Error sending the emails.");
       } else {
-        const response = await axios.post("https://your-backend-api.com/sendEmail", {
-          email,
-          subject,
-          message,
-        });
+        const response = await axios.post(
+          "http://localhost:5004/api/sendEmail",
+          { email, subject, message },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-        if (response.data.success) {
-          setFeedback("Email sent successfully!");
-        } else {
-          setFeedback("Error sending the email.");
-        }
+        setFeedback(response.data.success ? "Email sent successfully!" : "Error sending the email.");
       }
     } catch (error) {
       console.error("Error sending emails:", error);
@@ -90,89 +81,100 @@ const SendEmails = () => {
 
   return (
     <div className="send-emails-container">
-      <div className="overlay"></div>
       <h2>Send Emails</h2>
-      <p>Select your mailing option and provide the details.</p>
+      <p>Select your mailing option and fill in the details.</p>
 
-      <div className="radio-buttons">
-        <div className="radio-option">
-          <label>
-            <input
-              type="radio"
-              name="mailing-option"
-              checked={isMassMailing}
-              onChange={() => setIsMassMailing(true)}
-            />
-            Mass Mailing (CSV Upload)
-          </label>
-        </div>
-        <div className="radio-option">
-          <label>
-            <input
-              type="radio"
-              name="mailing-option"
-              checked={!isMassMailing}
-              onChange={() => setIsMassMailing(false)}
-            />
-            Send to a Particular Email
-          </label>
-        </div>
+      <div className="toggle-button-row">
+        <button
+          className={`toggle-half ${isMassMailing ? "active" : ""}`}
+          onClick={() => setIsMassMailing(true)}
+        >
+          Mass Mailing
+        </button>
+        <button
+          className={`toggle-half ${!isMassMailing ? "active" : ""}`}
+          onClick={() => setIsMassMailing(false)}
+        >
+          Single Email
+        </button>
       </div>
 
-      {isMassMailing ? (
-        <div className="upload-section">
-          <label htmlFor="fileUpload" className="input-label">
-            Upload CSV File:
-          </label>
+      <div className="form-grid">
+        {isMassMailing ? (
+          <div className="form-section full">
+            <label className="input-label">Upload CSV File</label>
+            <div className="csv-upload-inline" onClick={() => document.getElementById("csvUpload").click()}>
+              <span className="upload-icon">📎</span>
+              <span className="upload-text">
+                {csvFile ? csvFile.name : "Click to select CSV file"}
+              </span>
+              <input
+                type="file"
+                id="csvUpload"
+                accept=".csv"
+                onChange={handleFileUpload}
+                className="hidden-upload"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="form-section">
+            <label className="input-label">Recipient Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-field"
+              placeholder="example@email.com"
+            />
+          </div>
+        )}
+
+        <div className="form-section">
+          <label className="input-label">Subject</label>
           <input
-            type="file"
-            id="fileUpload"
-            accept=".csv"
-            onChange={handleFileUpload}
-            className="upload-input"
-          />
-        </div>
-      ) : (
-        <div className="input-section">
-          <label htmlFor="email" className="input-label">
-            Recipient's Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-            placeholder="Enter recipient's email"
+            type="text"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
             className="input-field"
+            placeholder="Email Subject"
           />
         </div>
-      )}
 
-      <div className="input-section">
-        <label htmlFor="subject" className="input-label">
-          Subject:
-        </label>
-        <input
-          type="text"
-          id="subject"
-          value={subject}
-          onChange={handleSubjectChange}
-          placeholder="Enter email subject"
-          className="input-field"
-        />
-      </div>
+        <div className="form-section full">
+          <label className="input-label">Message</label>
 
-      <div className="input-section">
-        <label htmlFor="message" className="input-label">
-          Message:
-        </label>
-        <textarea
-          id="message"
-          value={message}
-          onChange={handleMessageChange}
-          placeholder="Enter your message"
-          className="textarea-field"
-        />
+
+          <SunEditor
+  setContents={message}
+  onChange={setMessage}
+  setOptions={{
+    height: 300,
+    defaultStyle: "text-align: left;",
+    formats: ["p", "div", "h1", "h2"],
+    buttonList: [
+      ["undo", "redo"],
+      ["formatBlock"],
+      ["bold", "underline", "italic"],
+      ["fontColor", "hiliteColor"],
+     // ["align"],
+      ["list", "link", "image"],
+      ["removeFormat", "fullScreen"]
+    ],
+    imageUploadHeader: {}, // no headers needed
+    imageUploadUrl: null,  // disables external uploading
+    imageGalleryUrl: null,
+    imageUploadSizeLimit: 300000, // 300KB max to be safe
+    imageAccept: "image/*",
+    base64Encode: true, // ✅ ENABLE base64
+  }}
+  className="sun-editor"
+/>
+
+
+
+
+        </div>
       </div>
 
       {feedback && <p className="feedback">{feedback}</p>}
@@ -182,11 +184,7 @@ const SendEmails = () => {
         onClick={handleSendEmails}
         disabled={isSending}
       >
-        {isSending ? (
-          <span className="loading-spinner"></span>
-        ) : (
-          "Send Emails"
-        )}
+        {isSending ? <span className="loading-spinner"></span> : "Send Email"}
       </button>
     </div>
   );

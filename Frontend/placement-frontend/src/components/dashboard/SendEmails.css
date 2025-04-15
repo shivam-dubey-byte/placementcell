@@ -1,158 +1,238 @@
-/* General Container */
 .send-emails-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 30px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
-    font-family: 'Roboto', sans-serif;
-    position: relative;
-    backdrop-filter: blur(15px);  /* Background blur */
-    z-index: 1;
+  max-width: 880px;
+  margin: 20px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  font-family: 'Segoe UI', sans-serif;
+  overflow: visible; /* ✅ REMOVE SCROLL */
+}
+
+.send-emails-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #111;
+}
+
+.send-emails-container p {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.toggle-button-row {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 25px;
+  border: 1px solid rgba(0, 123, 255, 0.3);
+}
+
+.toggle-half {
+  width: 50%;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  background: linear-gradient(135deg, #f3f3f3, #eaeaea);
+  color: #555;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.toggle-half:hover {
+  background: #e0eaff;
+}
+
+.toggle-half.active {
+  background: linear-gradient(135deg, #007bff, #0056d2);
+  color: white;
+}
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-section {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-section.full {
+  flex: 1 1 100%;
+}
+
+.input-label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+
+.input-field {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px #007bff33;
+}
+
+.csv-upload-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f9f9f9;
+  border: 1px dashed #007bff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.csv-upload-inline:hover {
+  background: #eef5ff;
+}
+
+.upload-icon {
+  font-size: 1.4rem;
+  color: #007bff;
+}
+
+.upload-text {
+  font-size: 0.95rem;
+  color: #333;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.hidden-upload {
+  display: none;
+}
+
+/* ========== SUNEDITOR PREMIUM TEXT AREA STYLING ========== */
+.sun-editor {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.sun-editor:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border-color: #007bff;
+}
+
+.sun-editor .se-toolbar {
+  background: #f8f9fb;
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+  border-radius: 14px 14px 0 0;
+}
+
+.sun-editor .se-wrapper {
+  background-color: #fff;
+}
+
+.sun-editor .se-wrapper-inner {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  padding: 20px;
+  min-height: 300px; /* ✅ INCREASED HEIGHT */
+  border-radius: 0 0 14px 14px;
+  transition: all 0.25s ease-in-out;
+}
+
+.sun-editor .se-wrapper-inner:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px #007bff33;
+}
+
+/* ========== SEND BUTTON STYLING ========== */
+.send-btn {
+  display: block;                  /* ✅ ensures margin auto centers it */
+  margin: 30px auto 0;             /* ✅ centers horizontally */
+  padding: 12px 32px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #007bff, #0056d2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.send-btn:hover {
+  background: linear-gradient(to right, #0056d2, #0041a8);
+  transform: scale(1.03);
+}
+
+.send-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+
+.feedback {
+  text-align: center;
+  margin-top: 16px;
+  font-weight: 500;
+  color: #007bff;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    text-align: center;
-    color: #555;
-    font-size: 1rem;
-    margin-bottom: 30px;
-  }
-  
-  .radio-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-  }
-  
-  .radio-option {
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .radio-option input {
-    margin-right: 10px;
-  }
-  
-  /* Form Section */
-  .upload-section, .input-section {
-    margin-bottom: 20px;
-  }
-  
-  .input-label {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: #333;
-    display: block;
-    margin-bottom: 8px;
-  }
-  
-  .upload-input,
-  .input-field,
-  .textarea-field {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    color: #333;
-    outline: none;
-    transition: 0.3s;
-  }
-  
-  .upload-input:focus,
-  .input-field:focus,
-  .textarea-field:focus {
-    border-color: #4CAF50;
-  }
-  
-  .textarea-field {
-    height: 150px;
-    resize: none;
-  }
-  
-  /* Send Button */
-  .send-btn {
-    width: 100%;
-    padding: 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .send-btn:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-  }
-  
-  .send-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  /* Loading Spinner */
-  .loading {
-    background-color: #ccc;
-    position: relative;
-  }
-  
-  .loading-spinner {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #4CAF50;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
-    margin: auto;
-  }
-  
-  /* Feedback */
-  .feedback {
-    text-align: center;
-    margin-top: 20px;
-    color: #e74c3c;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  
-  .feedback.success {
-    color: #2ecc71;
-  }
-  
-  /* Responsive Styles */
-  @media (max-width: 768px) {
-    .send-emails-container {
-      padding: 20px;
-    }
-  
-    h2 {
-      font-size: 1.8rem;
-    }
-  
-    .input-field,
-    .textarea-field {
-      font-size: 1rem;
-    }
-  
-    .send-btn {
-      font-size: 1.2rem;
-    }
-  }
-  
-  /* Keyframes for Loading Spinner */
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
+}
+
+
+/* Show selected font color inside the fontColor button */
+.sun-editor .se-btn[data-command="fontColor"] .se-color-preview {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+
+.sun-editor .se-btn[data-command="fontColor"] {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

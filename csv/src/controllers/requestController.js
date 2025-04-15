@@ -1,6 +1,6 @@
 const { Readable } = require("stream");
 const csv = require("csv-parser");
-const { insertBulkData } = require("../models/requestModel");
+const { insertOrUpdateBulkData } = require("../models/requestModel");
 
 const parseCSVBuffer = (buffer) =>
   new Promise((resolve, reject) => {
@@ -22,12 +22,12 @@ const uploadPlacementCSV = async (req, res) => {
     }
 
     const data = await parseCSVBuffer(req.file.buffer);
-    const result = await insertBulkData("placement", year, data);
+    const result = await insertOrUpdateBulkData("placement", year, data);
 
-    res.json({ message: "Placement data uploaded", inserted: result.insertedCount });
+    res.json({ message: "Placement data processed", result });//inserted: result.insertedCount
   } catch (err) {
     console.error("Upload Placement Error:", err);
-    res.status(500).json({ message: "Failed to upload placement data" });
+    res.status(500).json({ message: "Failed to process placement data" });
   }
 };
 
@@ -39,9 +39,9 @@ const uploadStudentCSV = async (req, res) => {
     }
 
     const data = await parseCSVBuffer(req.file.buffer);
-    const result = await insertBulkData("student", year, data);
+    const result = await insertOrUpdateBulkData("student", year, data);
 
-    res.json({ message: "Student data uploaded", inserted: result.insertedCount });
+    res.json({ message: "Student data uploaded", result }); //inserted: result.insertedCount
   } catch (err) {
     console.error("Upload Student Error:", err);
     res.status(500).json({ message: "Failed to upload student data" });

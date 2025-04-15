@@ -9,6 +9,7 @@ import FAQsPage from "./pages/FAQsPage";
 import AboutPage from "./pages/AboutPage";
 import NotFoundPage from "./pages/NotFoundPage"; // Add a 404 page
 
+
 // Lazy load the DashboardPage for better performance
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 
@@ -28,7 +29,6 @@ function App() {
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/faqs" element={<FAQsPage />} />
           <Route path="/about" element={<AboutPage />} />
-
           {/* Protected Routes */}
           <Route path="/dashboard/*" element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" replace />} />
 

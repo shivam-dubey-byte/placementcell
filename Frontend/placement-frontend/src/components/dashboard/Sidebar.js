@@ -11,6 +11,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, userType, isMobile }) => {
     { name: "Approve LOR", path: "/dashboard/approve-lor", icon: "📝" },
     { name: "Send Emails", path: "/dashboard/send-emails", icon: "📧" },
     { name: "Manage Admins", path: "/dashboard/manage-admins", icon: "👨‍💼" },
+    { name: "Upload Data", path: "/dashboard/upload-files", icon: "📁" },
     //{ name: "File Manager", path: "/dashboard/file-manager", icon: "📁" },
   ];
 

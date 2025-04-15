@@ -13,7 +13,15 @@ import ApplyLOR from "./dashboard/ApplyForLOR";
 import UploadResume from "./dashboard/UploadResume";
 import Profile from "./dashboard/Profile";
 import Settings from "./dashboard/Settings";
+import UploadFiles from "./dashboard/UploadFiles";
 import "../styles/Dashboard.css";
+import StudentListPage from "./dashboard/StudentListPage";
+import OfferDetailsPage from "./dashboard/OfferDetailsPage";
+import RecruiterDetailsPage from "./dashboard/RecruiterDetailsPage";
+import TrendYearPage from "./dashboard/TrendYearPage";
+import CompanyListPage from "./dashboard/CompanyListPage";
+
+
 
 const Dashboard = ({ userType }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -52,6 +60,14 @@ const Dashboard = ({ userType }) => {
       { path: "send-emails", element: <SendEmails /> },
       { path: "manage-admins", element: <ManageAdmins /> },
       { path: "file-manager", element: <FileManager /> },
+      {path:"upload-files",element:<UploadFiles/>},
+      { path: "student-list/:year", element: <StudentListPage /> },
+      {path:"offer-details/:year", element:<OfferDetailsPage />} ,
+      {path:"recruiter/:year", element:<RecruiterDetailsPage />} ,
+      {path:"trend/:year", element:<TrendYearPage />} ,
+      {path:"companies/:year", element:<CompanyListPage />}
+      
+
     ],
     student: [
       { path: "/", element: <Home userType={userType} /> },
