@@ -75,6 +75,25 @@ const ResumeUpload = () => {
     }
   };
 
+  const handleDownload = async (url, name) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+  
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `Resume-${name.replace(/\s+/g, "_")}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      alert("Failed to download resume.");
+      console.error(error);
+    }
+  };
+
   return (
     <Card className="shadow-lg p-4 border-0" style={{ backgroundColor: "#f4f4f4" }}>
       <Card.Body>
@@ -102,7 +121,8 @@ const ResumeUpload = () => {
                 {resume && <p className="text-muted small mb-2">{resume.name}</p>}
                 <div className="d-flex justify-content-center gap-3">
                   <a
-                    href={resumeUrl}
+                    onClick={()=>handleDownload(resumeUrl,"resume")}
+                    //href={resumeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn"
@@ -112,7 +132,7 @@ const ResumeUpload = () => {
                     View Resume
                   </a>
                   <Form.Label className="btn text-white m-0" style={{ backgroundColor: "#f39c12" }}>
-                    <Form.Control type="file" className="d-none" accept=".pdf,.doc,.docx" onChange={handleUpload} />
+                    <Form.Control type="file" className="d-none" accept=".pdf" onChange={handleUpload} />
                     Reupload
                   </Form.Label>
                 </div>

@@ -101,6 +101,25 @@ const ApproveNOC = () => {
     handleAction(id, 0, email, dateTime);
   };
 
+  const handleDownload = async (url, name) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+  
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `Resume-${name.replace(/\s+/g, "_")}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      alert("Failed to download resume.");
+      console.error(error);
+    }
+  };
+
   return (
     <div className="noc-approval-container">
       <h2 className="title">Approve NOC Requests</h2>
@@ -129,7 +148,7 @@ const ApproveNOC = () => {
                 <label>Document:</label>
                 <div className="document-container">
                   <a
-                    href={noc.docLink}
+                    onClick={()=>handleDownload(noc.docLink,noc.studentEmail)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="document-link"

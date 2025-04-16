@@ -98,6 +98,27 @@ const ManageStudent = () => {
     }
   };
 
+
+  const handleDownload = async (url, name) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+  
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `Resume-${name.replace(/\s+/g, "_")}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      alert("Failed to download resume.");
+      console.error(error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchStudents(page);
   }, [page]);
@@ -164,7 +185,7 @@ const ManageStudent = () => {
                       )}
                     </td>
                     <td>
-                      <a href={student.resume} target="_blank" rel="noopener noreferrer" className="resume-link">
+                      <a onClick={() => handleDownload(student.resume, student.name)} target="_blank" rel="noopener noreferrer" className="resume-link">
                         View Resume
                       </a>
                     </td>

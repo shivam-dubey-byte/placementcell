@@ -154,6 +154,7 @@ const ApplyForLOR = () => {
             type="file"
             id="supportingDocuments"
             name="supportingDocuments"
+            accept="application/pdf"
             ref={fileInputRef} // Attach ref here
             onChange={handleFileChange}
             required

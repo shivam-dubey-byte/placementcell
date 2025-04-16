@@ -9,6 +9,8 @@ const {
     actionHistory
 } = require('../models/requestModel.js');
 
+const axios = require("axios");
+
 // Add new Active Request
 const addActiveRequest = async (req, res) => {
     const dateTime = new Date();
@@ -18,6 +20,23 @@ const addActiveRequest = async (req, res) => {
         const newRequest = await addToActiveRequest(name, email, message, fileUrl, dateTime);
         await increaseRequestData();
         await addToHistory(name, email, message, fileUrl, dateTime);
+
+        const notificationMessage = `You the New NOC request`;
+        const notificationTitle = "New NOC Request";
+        await axios.post(
+            "http://localhost:5009/api/notifications",
+            {
+              //email:"admin@mujiot.com", // recipient (student)
+              title: notificationTitle,
+              message: notificationMessage,
+              broadcast:true,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${req.token}` // use the extracted token
+              }
+            }
+          );
 
         res.status(201).json({ message: 'Data added to ActiveRequest', request: newRequest });
     } catch (error) {
@@ -62,6 +81,23 @@ const actionLorRequest = async (req, res) => {
         await actionHistory(email, dateTime, action, actionDateTime);
         await removeFromActiveRequest(email, dateTime);
         await decreaseActiveRequest();
+
+        const notificationMessage = `Your NOC request has been ${action === 1 ? 'approved' : 'rejected'}`;
+        const notificationTitle = action === 1 ? "Request NOC Approved ✅" : "Request Rejected ❌";
+        
+        await axios.post(
+          "http://localhost:5009/api/notifications",
+          {
+            email, // recipient (student)
+            title: notificationTitle,
+            message: notificationMessage
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${req.token}` // use the extracted token
+            }
+          }
+        );
 
         res.status(200).json({
             success: true,

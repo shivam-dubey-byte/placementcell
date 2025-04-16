@@ -118,6 +118,7 @@ const ApplyForNOC = () => {
             type="text"
             id="name"
             name="name"
+            accept="application/pdf"
             value={formData.name}
             onChange={handleChange}
             required

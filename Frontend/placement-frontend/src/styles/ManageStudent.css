@@ -76,6 +76,7 @@
 .resume-link {
   color: #007bff;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .resume-link:hover {
